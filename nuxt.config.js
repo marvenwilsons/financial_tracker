@@ -18,10 +18,12 @@ export default {
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
+    '~/assets/css/dq'
   ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
+    { src: '~/plugins/client-only.js', mode: 'client' }
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -41,7 +43,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -63,5 +65,5 @@ export default {
 
 serverMiddleware: [
   bodyParser.json(),
-  '~/server/client_services/services-routes.js',
+  '~/server/index.js',
 ]
