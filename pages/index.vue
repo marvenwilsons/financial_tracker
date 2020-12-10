@@ -4,10 +4,10 @@
     <section class="borderRad4 pad125 flex flexcenter spacebetween s" >
       <img style="height:40px; width:40px;" src="/favicon.ico" alt="">
       <div>
-        <v-btn outlined color="white" @click="view = 'dashboard'" class="marginright125" >
+        <v-btn outlined @click="view = 'dashboard'" :class="[view == 'dashboard' ? 'active' : 'non_active' ,'marginright025']" >
           Dashboard
         </v-btn>
-        <v-btn outlined color="white" @click="view = 'add-statement'" >
+        <v-btn outlined color="white" @click="view = 'add-statement'" :class="[view == 'add-statement' ? 'active' : 'non_active']" >
           Add Statement
         </v-btn>
       </div>
@@ -44,6 +44,15 @@ export default {
   color: white;
 }
 .colorwhite{
+  color: white !important;
+}
+.active {
+  background: #ffa33c;
+  color: black !important;
+  border: 1px solid #ffa33c;
+}
+.non_active {
+  border: 1px solid white;
   color: white !important;
 }
 </style>
