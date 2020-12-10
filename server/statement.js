@@ -23,7 +23,7 @@ function parse (statement) {
     const ar4 = ar3.map(e => {
         return {
             date: e.split(',')[0],
-            description:  e.split(',')[1],
+            description:  e.split(',')[1].replace("'",""),
             widthdrawn_amount:  e.split(',')[2],
             deposited_amount:  e.split(',')[3],
             balance_amount:  e.split(',')[4],
@@ -48,5 +48,6 @@ function getInsertIntoStatementQuery (raw, type) {
 
 module.exports = {
     addStatement,
-    getInsertIntoStatementQuery
+    getInsertIntoStatementQuery,
+    parse
 }

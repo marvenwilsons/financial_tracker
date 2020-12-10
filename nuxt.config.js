@@ -23,8 +23,9 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    { src: '~/plugins/client-only.js', mode: 'client' }
+    { src: '~/plugins/client-only.js', mode: 'client' },
   ],
+  
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -37,6 +38,7 @@ export default {
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
+    '@nuxtjs/axios'
   ],
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
@@ -60,10 +62,10 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
-  }
+  },
+  serverMiddleware: [
+    bodyParser.json(),
+    '~/server/index.js',
+  ]
 }
 
-serverMiddleware: [
-  bodyParser.json(),
-  '~/server/index.js',
-]
