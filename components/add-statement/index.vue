@@ -1,5 +1,5 @@
 <template>
-    <div style="max-width:900px;" >
+    <div >
         <div class="flex spacebetween" >
             <h5 style="color:white;" class="flex1" >Add Statement</h5>
             <div class=" flex flexcenter" >
