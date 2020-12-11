@@ -2,9 +2,11 @@
     <div >
         <div class="flex spacebetween" >
             <div class="flex2" >
-                <h5 style="color:white; margin:0;" class="flex1" >Add Statement (Bulk) </h5>
-                <div>Paste a CSV bank statement below, 
-                    <a @click="addOneEntry" style="color:yellow;">or add one entry</a>
+                <h5 style="color:white; margin:0;" class="flex1" > Add Statement {{addOneEntryMode ? '(One Entry Mode)' : '(Bulk)'}} </h5>
+                <div v-if="dataSet.length == 0" >
+                    Paste a CSV bank statement below, 
+                    <a v-if="!addOneEntryMode" @click="addOneEntry" style="color:yellow;">or add one entry</a>
+                    <a v-if="addOneEntryMode" @click="addOneEntryMode = false" style="color:yellow;">back to bulk mode</a>
                 </div>
             </div>
             <div class="flex1 flex flexend"  >
@@ -23,17 +25,21 @@
         <div v-if="error" style="background:white;" class="smth" >
             <div class="pad050 backgrounderr err" > <span class="marginright025" >Error:</span> {{error}}</div>
         </div>
-        <textarea v-if="dataSet.length == 0" v-model="csv" style="background:white; height:200px; font-size:11px;" class="fullwidth pad125" />
-        <div v-if="dataSet.length" :class="['relative', 'pad125', 'flex', 'flexcol', isReadyToSubmit ? 'isReady' : 'isNotReady',]" 
-        style="height:550px; border:1px solid #40647b;background:#40647b; overflow-x:hidden;" >
+        <!-- one entry mode -->
+        <singleEntry v-if="addOneEntryMode" />
+        <!-- textarea -->
+        <textarea v-if="dataSet.length == 0 && addOneEntryMode == false" v-model="csv" style="background:white; height:200px; font-size:11px;" class="fullwidth pad125" />
+        <!-- review area -->
+        <div v-if="dataSet.length && addOneEntryMode == false" :class="['relative', 'pad125', 'flex', 'flexcol', isReadyToSubmit ? 'isReady' : 'isNotReady','margintop050']" 
+            style="height:550px; border:1px solid #40647b;background:#40647b; overflow-x:hidden;" >
             
             <div style="max-height:43px;" class="flex spacebetween">
                 <div class="" style="width:30px;"  ># <br> ---- </div>
-                <div  class="" style="width:75px;" >date <br> ------ </div>
-                <div class="" style="width:200px;"   >description <br> --------------- </div>
-                <div class="" style="width:75px;" >widthdraw <br> --------------</div>
-                <div class="" style="width:75px;"  >deposit <br> ---------- </div>
-                <div class="" style="width:75px;"  >balance <br> ----------- </div>
+                <div  class="" style="width:75px;" >Date <br> ------ </div>
+                <div class="" style="width:200px;"   >Description <br> --------------- </div>
+                <div class="" style="width:75px;" >Withdraw <br> --------------</div>
+                <div class="" style="width:75px;"  >Deposit <br> ---------- </div>
+                <div class="" style="width:75px;"  >Balance <br> ----------- </div>
                 <div style="width:140px" >purpose <span v-if="transaction_purpose.tobeCompleted != 0" style="background:red;" class="padleft025 padright025" >
                     {{transaction_purpose.tobeCompleted}} left</span> <br> ------------------------- 
                 </div>
@@ -60,7 +66,7 @@
                 </div>
                 <div style="width:75px;" class=" " >
                     <div class="flex flexcenter" >
-                        <input style="color:white; width:75px;" @change="inputChange" :id="`${index}-widthdrawn_amount`" :value="item.widthdrawn_amount" type="text">
+                        <input style="color:white; width:75px;" @change="inputChange" :id="`${index}-withdrawn_amount`" :value="item.withdrawn_amount" type="text">
                     </div>
                 </div>
                 <div style="width:75px;" class=" " >
@@ -106,6 +112,7 @@
 
 <script>
 import loadingAnimation from './loading-animation'
+import singleEntry from './single-entry'
 export default {
     data: () => ({
         csv: undefined,
@@ -120,14 +127,16 @@ export default {
             tobeCompleted: 0,
             isComplete: false,
             error: undefined
-        }
+        },
+        addOneEntryMode: false
     }),
     components: {
-        loadingAnimation
+        loadingAnimation,
+        singleEntry
     },
     methods: {
         addOneEntry() {
-            this.$emit('addOneEntry')
+            this.addOneEntryMode = true
         },
         parse(statement) {
             // const ar = statement.slice(statement.indexOf('\n')).split('\n')
@@ -152,7 +161,7 @@ export default {
                     return {
                         date: e.split(',')[0],
                         description:  e.split(',')[1].replace(/[!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?]/gim, ""),
-                        widthdrawn_amount:  e.split(',')[2],
+                        withdrawn_amount:  e.split(',')[2],
                         deposited_amount:  e.split(',')[3],
                         balance_amount:  e.split(',')[4],
                         transaction_purpose: 'none'
@@ -202,8 +211,8 @@ export default {
         scanProblems(dSet,allowParse) {
             const sc = (a) => {
                 return a.map((e,i) => {
-                    const {widthdrawn_amount, deposited_amount, balance_amount} = e
-                    if(isNaN(widthdrawn_amount) || isNaN(deposited_amount) || isNaN(balance_amount)) {
+                    const {withdrawn_amount, deposited_amount, balance_amount} = e
+                    if(isNaN(withdrawn_amount) || isNaN(deposited_amount) || isNaN(balance_amount)) {
                         return {
                             problem: true,
                             data: e,

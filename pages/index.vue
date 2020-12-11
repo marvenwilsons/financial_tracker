@@ -10,6 +10,9 @@
         <v-btn outlined color="white" @click="view = 'add-statement'" :class="[view == 'add-statement' ? 'active' : 'non_active']" >
           Add Statement
         </v-btn>
+        <v-btn outlined color="white" @click="view = 'statement-manager'" :class="[view == 'statement-manager' ? 'active' : 'non_active']" >
+          Statement Manager
+        </v-btn>
       </div>
     </section>
     <!--  -->
