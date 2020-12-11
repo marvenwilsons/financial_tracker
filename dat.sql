@@ -2,17 +2,17 @@ CREATE TABLE statement (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     date date NOT NULL,
     description TEXT NOT NULL,
-    statement_type BIGINT NOT NULL  REFERENCES statement_type(id),
-    statement_type VARCHAR(100) NOT NULL,
+    statement_type VARCHAR(250) NOT NULL,
     widthdrawn_amount MONEY NOT NULL,
     deposited_amount MONEY NOT NULL,
-    balance_amount MONEY NOT NULL
+    balance_amount MONEY NOT NULL,
+    transaction_purpose VARCHAR(250) NOT NULL
 );
 
-INSERT INTO statement 
-    (date, description, widthdrawn_amount, deposited_amount, balance_amount, statement_type) VALUES
-    (11/03/2020, 'PAYMENT - THANK YOU, 0)', 300.00, 4122.74),
-    (11/03/2020, 'OLD NAVY CANADA 5488', 33.59, 0, 4156.33)
+INSERT INTO statement (date,         description,       widthdrawn_amount, deposited_amount, statement_type, transaction_purpose, balance_amount) VALUES                                 19:23:24
+(to_date('10-08-2020','MM-DD-YYYY'), 'PRESTO',              20.00, 0, 1,    essential,         4099.74),
+(to_date('10-08-2020','MM-DD-YYYY'), 'DOLLARAMA  ',         12.15, 0, 1,    food-essential,    4111.89),
+(to_date('10-08-2020','MM-DD-YYYY'), 'NICK  MIRAS NO FRILL',11.66, 0, 1,    Investment,        4123.55)
 
 
 CREATE TABLE statement_type (

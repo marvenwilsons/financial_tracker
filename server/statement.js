@@ -33,11 +33,11 @@ function parse (statement) {
 }
 
 function convertToInsertToStatement (parsedStatement, statement_type) {
-    let base =`INSERT INTO statement (date, description, widthdrawn_amount, deposited_amount, statement_type, balance_amount) VALUES \n`
+    let base =`INSERT INTO statement (date, description, widthdrawn_amount, deposited_amount, statement_type, transaction_purpose, balance_amount) VALUES \n`
     parsedStatement.map((e,i) => {
         const d = `to_date('${e.date.replace("/","-").replace("/","-")}','MM-DD-YYYY')`
-        const st = `${statement_type == 'credit' ? '1' : '0'}`
-        base = base.concat( `(${d}, '${e.description}', ${e.widthdrawn_amount}, ${e.deposited_amount}, ${st}, ${e.balance_amount})${i == parsedStatement.length - 1? ' returning *' : ','} \n` )
+        const st = `${statement_type == 'credit' ? 'credit' : 'deposit'}`
+        base = base.concat( `(${d}, '${e.description}', ${e.widthdrawn_amount}, ${e.deposited_amount}, '${st}', '${e.transaction_purpose}', ${e.balance_amount})${i == parsedStatement.length - 1? ' returning *' : ','} \n` )
     })
     return base.trim()
 }
@@ -49,5 +49,6 @@ function getInsertIntoStatementQuery (raw, type) {
 module.exports = {
     addStatement,
     getInsertIntoStatementQuery,
-    parse
+    parse,
+    convertToInsertToStatement
 }

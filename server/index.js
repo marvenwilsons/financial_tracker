@@ -1,62 +1,50 @@
 const express = require('express')
 const app = express()
-const router = express.Router()
+// const router = express.Router()
 const statement = require('./statement')
-// postgres setup
-const pg = require('pg')
-const {Pool} = pg
-const pool = new Pool({
-    user: "postgres",
-    password: "postgres",
-    host: "localhost",
-    port: 5432,
-    database: 'money'
-})
-const query = (text,params) => pool.query(text,params)
+const db = require('./db')
 
+app.use(express.json())
 // get all credit statements
-router.get('/statement/credit' ,(req,res) => {
+app.get('/statement/credit' ,(req,res) => {
     
 
 })
 // get all debit staements
-router.get('/statement/debit' ,(req,res) => {
+app.get('/statement/debit' ,(req,res) => {
     // const insertStatementQuery = statement.getInsertIntoStatementQuery(sampleStatement, 'debit')
     // const x = statement.addStatement(query,insertStatementQuery)
 })
 // get all 
 // get a specific statement
-router.get('/statement/:from_to', (req,res) => {
+app.get('/statement/:from_to', (req,res) => {
     // from_to is a point on time, ei: August 1 - October 1
     // so you have to use the BETWEEN statement
 })
 // add a new statement
-router.post('/statement', async (req,res) => {
+app.post('/statement', async (req,res) => {
     try{
         console.log('adding statement')
-        const { csv, statement_type } = req.body
-        const cq = await query("SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date FROM statement")
+        const { dataSet, statement_type } = req.body
+        const cq = await db("SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date FROM statement")
         
         // BETWEEN query: SELECT date FROM statement WHERE date BETWEEN '2020-12-30'::DATE AND '2020-12-30'::DATE
-        // 1. Get the submit date start to finsih
-        // 2. 
 
-        // console.log(cq.rows)
-        // console.log(dateRange.rows)
+        // 1. Scan submitted dataSet, extract date range
+        console.log('Step 1')
         const range = []
-        const submitedDateRange = statement.parse(csv).map(({date,description,widthdrawn_amount}, index) => {
+        const submitedDateRange = dataSet.map(({date,description,widthdrawn_amount}, index) => {
             if(index == 0) {
                 range.push(date.replace('/','-').replace('/','-'))
-            }else if(index == statement.parse(csv).length - 1) {
+            }else if(index == dataSet.length - 1) {
                 range.push(date.replace('/','-').replace('/','-'))
             }
-            const csvkeys = `${date.replace('/','-').replace('/','-')}${description}$${widthdrawn_amount}`
-            return csvkeys
+            const dataSetKey = `${date.replace('/','-').replace('/','-')}${description}$${widthdrawn_amount}`
+            return dataSetKey
         })
-
-        const dateRange = await query(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, widthdrawn_amount FROM statement WHERE date BETWEEN '${range[0]}'::DATE AND '${range[1]}'::DATE`)
-        console.log(dateRange.rows.length === submitedDateRange.length)
-        
+        console.log('Step 2')
+        // 2. Scan statement database using the extracted data
+        const dateRange = await db(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, widthdrawn_amount FROM statement WHERE date BETWEEN '${range[0]}'::DATE AND '${range[1]}'::DATE`)
         let repeatedItems = 0
         const nonRepeatedItems = []
         for(let i = 0; i < dateRange.rows.length; i++) {
@@ -68,24 +56,24 @@ router.post('/statement', async (req,res) => {
                 nonRepeatedItems.push(submitedDateRange[i])
             }
         }
-
+        console.log('Step 3')
+        // 3. Determine if submitted data already exist in database
         if(repeatedItems == 0) {
-            const insertStatementQuery = statement.getInsertIntoStatementQuery(csv,statement_type)
-            const rows = await statement.addStatement(query,insertStatementQuery)
-            console.log('Adding Statement', rows)
+            console.log('==> Data OK! Adding Statement')
+            const insertStatementQuery = statement.convertToInsertToStatement(dataSet,statement_type)
+            const rows = await statement.addStatement(db,insertStatementQuery)
+            console.log('-->', rows)
             res.status(200).json({
-                status: 200,
-                rows
+                status: 'success',
+                results: rows
             })
         } else {
+            console.log('==> Data Not OK!')
             res.status(200).json({
-                status: 'failed'
+                status: 'failed',
+                msg: `Found ${repeatedItems} items already exist`
             })
         }
-        
-
-        //
-
     }catch(err) {
         console.log(err)
     }
@@ -96,6 +84,6 @@ router.post('/statement', async (req,res) => {
 // })
 
 module.exports = {
-    handler: router,
+    handler: app,
     path: '/money'
 }

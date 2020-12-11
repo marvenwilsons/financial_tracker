@@ -1,9 +1,11 @@
 <template>
     <div >
         <div class="flex spacebetween" >
-            <div class="flex1" >
-                <h5 style="color:white; margin:0;" class="flex1" >Add Statement</h5>
-                <div>Paste a CSV bank statement below.</div>
+            <div class="flex2" >
+                <h5 style="color:white; margin:0;" class="flex1" >Add Statement (Bulk) </h5>
+                <div>Paste a CSV bank statement below, 
+                    <a @click="addOneEntry" style="color:yellow;">or add one entry</a>
+                </div>
             </div>
             <div class="flex1 flex flexend"  >
                 <span class="marginright125" >
@@ -22,61 +24,74 @@
             <div class="pad050 backgrounderr err" > <span class="marginright025" >Error:</span> {{error}}</div>
         </div>
         <textarea v-if="dataSet.length == 0" v-model="csv" style="background:white; height:200px; font-size:11px;" class="fullwidth pad125" />
-        <div v-if="dataSet.length" :class="['relative', 'pad125', 'flex', 'flexcol', isReadyToSubmit ? 'isReady' : 'isNotReady']" 
-        style="height:550px; border:1px solid #40647b;background:#40647b" >
+        <div v-if="dataSet.length" :class="['relative', 'pad125', 'flex', 'flexcol', isReadyToSubmit ? 'isReady' : 'isNotReady',]" 
+        style="height:550px; border:1px solid #40647b;background:#40647b; overflow-x:hidden;" >
             
-            <div style="max-height:43px;" class="flex">
-                <div  style="width:30px;"  ># <br> -- </div>
-                <div style="width:95px;" >date <br> ------ </div>
-                <div style="width:200px;"   >description <br> --------------- </div>
-                <div class="marginright125" >widthdrawn_amount <br> --------------------------- </div>
-                <div class="" style="width:160px;"  >deposited_amount <br> ------------------------- </div>
-                <div class="flex1" >transaction_purpose <span v-if="transaction_purpose.tobeCompleted != 0" style="background:red;" class="padleft025 padright025" >
+            <div style="max-height:43px;" class="flex spacebetween">
+                <div class="" style="width:30px;"  ># <br> ---- </div>
+                <div  class="" style="width:75px;" >date <br> ------ </div>
+                <div class="" style="width:200px;"   >description <br> --------------- </div>
+                <div class="" style="width:75px;" >widthdraw <br> --------------</div>
+                <div class="" style="width:75px;"  >deposit <br> ---------- </div>
+                <div class="" style="width:75px;"  >balance <br> ----------- </div>
+                <div style="width:140px" >purpose <span v-if="transaction_purpose.tobeCompleted != 0" style="background:red;" class="padleft025 padright025" >
                     {{transaction_purpose.tobeCompleted}} left</span> <br> ------------------------- 
                 </div>
             </div>
             <div :style="{marginTop:'1px', background: problimaticDataIndex.includes(index) ? 'red': ''}" 
-                class="flex relative itemHover" 
+                class="flex relative itemHover spacebetween" 
                 style="font-size:14px; max-height:23px;" 
                 v-for="(item,index) in dataSet" :key="index" 
             >
                 <div v-if="isReadyToSubmit" id="luck" class="fullwidth fullheight-percent absolute" style="z-index:100" >
                     <loadingAnimation :dataSetLength="dataSet.length" @loadingComplete="loadingComplete" :index="index" />
                 </div>
-                <div style="width:30px;">
+                <!-- index -->
+                <div class="" style="width:30px;">
                     {{index}}
                 </div>
-                <div style="width:100px;" >
-                    <input style="color:white; width:90px;" @change="inputChange"  :value="item.date" :id="`${index}-date`" type="text">
+                <!-- date -->
+                <div class="" style="width:75px;" >
+                    <input style="color:white; width:75px;" @change="inputChange"  :value="item.date" :id="`${index}-date`" type="text">
                 </div>
-                <div  style="width:200px;" >
+                <!-- desc -->
+                <div  style="width:200px;" class="" >
                     <input style="color:white; width:180px;" @change="inputChange"  :value="item.description" :id="`${index}-description`"  type="text">
                 </div>
-                <div class="marginright125" >
-                    <span class="flex flexcenter" >
-                        <input style="color:white;" @change="inputChange" :id="`${index}-widthdrawn_amount`" :value="item.widthdrawn_amount" type="text">
-                    </span>
+                <div style="width:75px;" class=" " >
+                    <div class="flex flexcenter" >
+                        <input style="color:white; width:75px;" @change="inputChange" :id="`${index}-widthdrawn_amount`" :value="item.widthdrawn_amount" type="text">
+                    </div>
                 </div>
-                <div class="" style="width:160px;" >
+                <div style="width:75px;" class=" " >
                     <span class="flex" >
-                        <input style="color:white;" @change="inputChange"  :value="item.deposited_amount" :id="`${index}-deposited_amount`" type="text">
+                        <input style="color:white; width:75px;" @change="inputChange"  :value="item.deposited_amount" :id="`${index}-deposited_amount`" type="text">
                     </span>
                 </div>
-                <div :style="{width:'150px', background: dataSet[index].transaction_purpose == 'none' ? 'red' : '' }" >
-                    <select :id="`${index}-transaction_purpose`" @change="inputChange" style="color:white;">
+                <div style="width:75px;" class=" " >
+                    <span class="flex" >
+                        <input style="color:white; width:75px;" @change="inputChange"  :value="item.balance_amount" :id="`${index}-balance_amount`" type="text">
+                    </span>
+                </div>
+                <div :style="{width:'140px', background: dataSet[index].transaction_purpose == 'none' ? 'red' : '' }" >
+                    <select :id="`${index}-transaction_purpose`" @change="inputChange" style="color:white; width:140px;">
                         <option value="none" >none</option>
                         <option value="essential">essential</option>
-                        <option value="food-essential">food-essential</option>
-                        <option value="food-leisure">food-leisure</option>
-                        <option value="Investment">Investment</option>
-                        <option value="clothes-personal">clothes-personal</option>
-                        <option value="medicine-doctor">medicine-doctor</option>
-                        <option value="monthly-responsibility">monthly-responsibility</option>
-                        <option value="monthly-deductions">monthly-deductions</option>
-                        <option value="dept-payment">dept-payment</option>
-                        <option value="entertainment">entertainment</option>
-                        <option value="online-subscription">online-subscription</option>
-                        <option value="occasional-spending">occasional-spending</option>
+                        <option value="grocery">Grocery</option>
+                        <option value="food-leisure">Food Leisure</option>
+                        <option value="transportation">Transportation</option>
+                        <option value="investment-self-improvement">Investment / Self Improvement</option>
+                        <option value="clothing-personal_spending">Clothing / personal</option>
+                        <option value="midical">Midical Speding</option>
+                        <option value="dept-payment">Dept-payment</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="online-subscription">Online Subscription</option>
+                        <option value="occasional-spending">Occasional Spending</option>
+                        <option value="bank-tax">Bank Tax</option>
+                        <option value="bank-insurance">Bank insurance</option>
+                        <option value="life-insurance">Life Insurerance</option>
+                        <option value="phone-monthly-fee">Phone Monthly Fee</option>
+                        <option value="interest-fee">Interest Fee</option>
                     </select>
                 </div>
             </div>
@@ -111,8 +126,12 @@ export default {
         loadingAnimation
     },
     methods: {
+        addOneEntry() {
+            this.$emit('addOneEntry')
+        },
         parse(statement) {
-            const ar = statement.slice(statement.indexOf('\n') + 1).split('\n')
+            // const ar = statement.slice(statement.indexOf('\n')).split('\n')
+            const ar = statement.slice('\n').split('\n')
             const ar2 = ar.map(e => {
                 
                 if(e){
@@ -132,7 +151,7 @@ export default {
                 const ar4 = ar3.map(e => {
                     return {
                         date: e.split(',')[0],
-                        description:  e.split(',')[1].replace(/[^a-zA-Z ]/g, "") == undefined ?  e.split(',')[1] : e.split(',')[1].replace(/[^a-zA-Z ]/g, ""),
+                        description:  e.split(',')[1].replace(/[!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?]/gim, ""),
                         widthdrawn_amount:  e.split(',')[2],
                         deposited_amount:  e.split(',')[3],
                         balance_amount:  e.split(',')[4],
@@ -206,12 +225,16 @@ export default {
                 dataSet: this.dataSet,
                 statement_type: this.statement_type
             }).then(res => {
+                console.log('Upload Response:')
                 console.log(res)
             })
         },
         loadingComplete() {
-            alert("Upload Completed")
-            location.reload()
+            setTimeout(() => {
+                alert('Upload Complete')
+                location.reload()
+            }, 1000);
+            console.log("Upload Completed")
         },
         submit() {
             if(!this.csv) {
