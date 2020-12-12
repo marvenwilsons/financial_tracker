@@ -14,8 +14,8 @@
                 </span>
             </div>
             <div class="margintop025 label" >
-                <div class="label" > Deposit Amount:</div>
-                <input v-model="deposit_amount" type="number" class="padleft025">
+                <div class="label" > Deposited Amount:</div>
+                <input v-model="deposited_amount" type="number" class="padleft025">
             </div>
             <div class="margintop025" >
                 <div class="label" >Withdraw Amount:</div>
@@ -24,6 +24,10 @@
             <div class="margintop025" >
                 <div class="label">Balance Amount:</div>
                 <input v-model="balance_amount" type="number" class="padleft025">
+            </div>
+            <div class="margintop025" >
+                <div class="label">Description:</div>
+                <input v-model="description" type="text" class="padleft025">
             </div>
             <div class="flex flexend" >
                 <button @click="addEntry" class="padleft025 padright025 margintop125" >
@@ -39,13 +43,20 @@ export default {
     props: ['error'],
     data: () => ({
         date: 'MM/DD/YYYY',
-        deposit_amount: 0,
+        deposited_amount: 0,
         withdrawn_amount: 0,
-        balance_amount: 0
+        balance_amount: 0,
+        description: undefined
     }),
     methods: {
         addEntry() {
-            console.log('add entry')
+            this.$emit('insertEntry', {
+                deposited_amount: this.deposited_amount,
+                date: this.date,
+                withdrawn_amount: this.withdrawn_amount,
+                balance_amount: this.balance_amount,
+                description: this.description
+            })
         }
     }
 }

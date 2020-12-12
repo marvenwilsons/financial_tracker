@@ -1,8 +1,17 @@
 <template>
-    <div >
+    <div class="relative" >
+        <div v-if="isProcessDone.length == 2" style="z-index:200;" class="widgetsection flex flexcenter flexcol absolute fullwidth fullheight-percent">
+            <h5 style="color:white" >REPORT</h5>
+            <div class="pad125 marginbottom125 flex flexwrap flexcenter" style="border:1px solid white; width:400px;" >
+                {{report}}
+            </div>
+            <v-btn class="marginbottom125" @click="done" >
+                Ok
+            </v-btn>
+        </div>
         <div class="flex spacebetween" >
             <div class="flex2" >
-                <h5 style="color:white; margin:0;" class="flex1" > Add Statement {{addOneEntryMode ? '(One Entry Mode)' : '(Bulk)'}} </h5>
+                <h5 style="color:white; margin:0;" class="flex1" > Add Statement </h5>
                 <div v-if="dataSet.length == 0" >
                     Paste a CSV bank statement below, 
                     <a v-if="!addOneEntryMode" @click="addOneEntryMode = true" style="color:yellow;">Insert one entry</a>
@@ -22,13 +31,13 @@
                 </div>
             </div>
         </div>
-        <div v-if="error" style="background:white;" class="smth" >
-            <div class="pad050 backgrounderr err" > <span class="marginright025" >Error:</span> {{error}}</div>
+        <div v-if="error" style="background:#c81c01;" class="smth margintop050" >
+            <div class="pad050" > <span class="marginright025" >Error:</span> {{error}}</div>
         </div>
         <!-- one entry mode -->
         <singleEntry @insertEntry="insertEntry" v-if="addOneEntryMode" />
         <!-- textarea -->
-        <textarea v-if="dataSet.length == 0 && addOneEntryMode == false" v-model="csv" style="background:white; height:200px; font-size:11px;" class="fullwidth pad125" />
+        <textarea v-if="dataSet.length == 0 && addOneEntryMode == false" v-model="csv" style="background:white; height:200px; font-size:13px; font-family:monospace;" class="fullwidth pad125" />
         <!-- review area -->
         <div v-if="dataSet.length && addOneEntryMode == false" :class="['relative', 'pad125', 'flex', 'flexcol', isReadyToSubmit ? 'isReady' : 'isNotReady','margintop050']" 
             style="height:550px; border:1px solid #40647b;background:#26344a; overflow-x:hidden;" >
@@ -36,7 +45,7 @@
             <div style="max-height:43px;" class="flex spacebetween">
                 <div class="" style="width:30px;"  ># <br> ---- </div>
                 <div  class="" style="width:75px;" >Date <br> ------ </div>
-                <div class="" style="width:200px;"   >Description <br> --------------- </div>
+                <div class="" style="width:200px;"   >Description <br> <span style="color:#afafaf" >---------------</span> </div>
                 <div class="" style="width:75px;" >Withdraw <br> --------------</div>
                 <div class="" style="width:75px;"  >Deposit <br> ---------- </div>
                 <div class="" style="width:75px;"  >Balance <br> ----------- </div>
@@ -108,7 +117,7 @@
             </div>
         </div>
         <div class="flex flexend margintop125" >
-            <v-btn v-if="csv" @click="submit" >
+            <v-btn small v-if="csv" @click="submit" >
                 {{!isReadyToSubmit && transaction_purpose.isComplete == false ? 'Evaluate' : 'Submit'}}
             </v-btn>
         </div>
@@ -134,15 +143,23 @@ export default {
             error: undefined
         },
         addOneEntryMode: false,
-        isProcessDone: false
+        isProcessDone: [],
+        report: undefined
     }),
     components: {
         loadingAnimation,
         singleEntry
     },
     methods: {
+        done() {
+            location.reload()
+        },
         insertEntry(payload) {
-
+            const { date, description, deposited_amount, withdrawn_amount, balance_amount } = payload
+            const csv = `${date},'${description}',${withdrawn_amount},${deposited_amount},${balance_amount}`
+            this.csv = csv
+            this.addOneEntryMode = false
+            this.submit()
         },
         parse(statement) {
             // const ar = statement.slice(statement.indexOf('\n')).split('\n')
@@ -242,13 +259,22 @@ export default {
             }).then(res => {
                 console.log('Upload Response:')
                 console.log(res)
+                if(res.data.status == 'success') {
+                    console.log('yes')
+                    this.isProcessDone.push(true)
+                    this.report = `Successfuly added ${res.data.results.length} ${res.data.results.length == 1 ? 'row' : 'rows'} in database`
+                    this.csv = undefined
+                } else {
+                    this.report = res
+                }
             })
         },
         loadingComplete() {
             setTimeout(() => {
                 // alert('Upload Complete')
                 // location.reload()
-                this.isProcessDone = true
+                this.isProcessDone.push(true)
+                this.dataSet = []
             }, 1000);
             console.log("Upload Completed")
         },

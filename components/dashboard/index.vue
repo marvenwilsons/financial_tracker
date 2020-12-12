@@ -4,5 +4,6 @@
         <hr>
         <!-- sec1: total spending of all transaction from first statement to latest -->
         <!-- sec2: select statements to analyze -->
+        <!-- sec3: dept vs asset chart -->
     </div>
 </template>

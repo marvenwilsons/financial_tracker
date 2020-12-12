@@ -58,4 +58,7 @@ export default {
   border: 1px solid white;
   color: white !important;
 }
+.widgetsection {
+  background: #26344a;
+}
 </style>
