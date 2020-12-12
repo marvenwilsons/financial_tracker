@@ -40,6 +40,21 @@
         <div v-if="error" style="background:#c81c01;" class="smth margintop050" >
             <div class="pad050" > <span class="marginright025" >Error:</span> {{error}}</div>
         </div>
+        <div v-if="info" class="margintop125 flex spacebetween pad050 borderRad4 flexcenter smth" style="background: #26344a;" >
+            <div>
+                <span class="marginleft050" >
+                    ⚠️ 
+                </span>
+                <span  style="color:#c2a242" class="marginleft050" >
+                    {{info}}
+                </span>
+            </div>
+            <div>
+                <v-btn class="marginright050"  @click="info = undefined" small >
+                    Ok
+                </v-btn>
+            </div>
+        </div>
         <!-- one entry mode -->
         <singleEntry @insertEntry="insertEntry" v-if="addOneEntryMode" />
         <!-- textarea -->
@@ -151,7 +166,8 @@ export default {
         addOneEntryMode: false,
         isProcessDone: [],
         report: undefined,
-        nonRepeatedData: undefined
+        nonRepeatedData: undefined,
+        info: undefined
     }),
     components: {
         loadingAnimation,
@@ -334,7 +350,18 @@ export default {
                         }
                     }
                 } else {
-                    this.dataSet = this.parse(this.csv)
+
+                    const csv_to_array = this.csv.split('\n')
+
+                    // remove dubplicates
+                    const filtered_csv_array = csv_to_array.filter((item,index) => csv_to_array.indexOf(item) == index)
+                    this.dataSet = this.parse(filtered_csv_array.join('\n'))
+
+                    const duplicate_items = csv_to_array.filter((item,index) => csv_to_array.indexOf(item) !== index).length
+                    if(duplicate_items > 0) {
+                        this.info = `Found and removed ${duplicate_items} duplicate items`
+                    }
+
                     this.transaction_purpose.tobeCompleted = this.dataSet.length
                     const problimaticData = this.scanProblems(this.csv, false)
 
