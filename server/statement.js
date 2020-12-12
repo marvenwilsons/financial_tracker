@@ -3,7 +3,7 @@ async function addStatement(pgQuery, query) {
     return res.rows
 }
 
-async function isReapeated(dataSet,db) {
+async function isRepeated(dataSet,db) {
     console.log('==> Checking Database Step 1')
     const range = []
     const submitedDateRange = dataSet.map(({date,description,withdrawn_amount}, index) => {
@@ -17,22 +17,26 @@ async function isReapeated(dataSet,db) {
     })
     console.log('==> Step 2 Confirming')
     // 2. Scan statement database using the extracted data
-    const dateRange = await db(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, withdrawn_amount FROM statement WHERE date BETWEEN '${range[0]}'::DATE AND '${range[1]}'::DATE`)
+    const dateRange = dataSet.length == 1 ?
+    await db(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, withdrawn_amount FROM statement WHERE date = $1`, [dataSet[0].date]) :
+    await db(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, withdrawn_amount FROM statement WHERE date BETWEEN '${range[0]}'::DATE AND '${range[1]}'::DATE`)
+    
     let repeatedItems = 0
+    const repeatedItemsIndex = []
     const nonRepeatedItems = []
     for(let i = 0; i < dateRange.rows.length; i++) {
         const {date,description,withdrawn_amount} = dateRange.rows[i]
         const dbRange = `${date.replace('/','-').replace('/','-')}${description}${withdrawn_amount == '$0.00' ? '$0' : withdrawn_amount}`
-        if(submitedDateRange.includes(dbRange)) {
+        
+        if(submitedDateRange[i] === dbRange) {
             repeatedItems ++
-        } else {
-            nonRepeatedItems.push(submitedDateRange[i])
+            repeatedItemsIndex.push(i)
         }
     }
 
     return {
         repeatedItems,
-        nonRepeatedItems
+        repeatedItemsIndex
     }
 }
 
@@ -84,5 +88,5 @@ module.exports = {
     getInsertIntoStatementQuery,
     parse,
     convertToInsertToStatement,
-    isReapeated
+    isRepeated
 }

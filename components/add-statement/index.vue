@@ -1,12 +1,18 @@
 <template>
-    <div class="relative" >
+    <div style="min-height:300px;" class="relative" >
         <div v-if="isProcessDone.length == 2" style="z-index:200;" class="widgetsection flex flexcenter flexcol absolute fullwidth fullheight-percent">
             <h5 style="color:white" >REPORT</h5>
             <div class="pad125 marginbottom125 flex flexwrap flexcenter" style="border:1px solid white; width:400px;" >
-                {{report}}
+                <small>
+                    {{report}}
+                </small>
             </div>
-            <v-btn class="marginbottom125" @click="done" >
-                Ok
+            <div class="flex flexcol" v-if="nonRepeatedData" >
+                Below are non repeated data, please copy and try again
+                <textarea style="background:white; height:50px; font-size:10px; font-family:monospace;" v-model="nonRepeatedData" id="" cols="40" rows="5"></textarea>
+            </div>
+            <v-btn class="marginbottom125 margintop125" @click="done" >
+                DONE
             </v-btn>
         </div>
         <div class="flex spacebetween" >
@@ -144,7 +150,8 @@ export default {
         },
         addOneEntryMode: false,
         isProcessDone: [],
-        report: undefined
+        report: undefined,
+        nonRepeatedData: undefined
     }),
     components: {
         loadingAnimation,
@@ -260,12 +267,24 @@ export default {
                 console.log('Upload Response:')
                 console.log(res)
                 if(res.data.status == 'success') {
-                    console.log('yes')
                     this.isProcessDone.push(true)
                     this.report = `Successfuly added ${res.data.results.length} ${res.data.results.length == 1 ? 'row' : 'rows'} in database`
                     this.csv = undefined
                 } else {
-                    this.report = res
+                    this.isProcessDone.push(true)
+                    this.csv = undefined
+                    if(res.data.nonRepeatedData.length > 0) {
+                        const to_csv = res.data.nonRepeatedData.map(e => {
+                            const { date, description, deposited_amount, withdrawn_amount, balance_amount } = e
+                            return `${date},'${description}',${withdrawn_amount},${deposited_amount},${balance_amount} \n`
+                        })
+
+                        this.nonRepeatedData = to_csv.join("")
+                        this.report = res.data.msg
+                    } else {
+                        this.csv = undefined
+                        this.report = res.data.msg
+                    }
                 }
             })
         },

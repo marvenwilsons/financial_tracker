@@ -3,6 +3,7 @@ const app = express()
 // const router = express.Router()
 const statement = require('./statement')
 const db = require('./db')
+const { isReapeated } = require('./statement')
 
 app.use(express.json())
 // get all credit statements
@@ -23,25 +24,18 @@ app.get('/statement/:from_to', (req,res) => {
 })
 // add a new statement
 app.post('/statement', async (req,res) => {
+    // const cq = await db("SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date FROM statement")
+    // BETWEEN query: SELECT date FROM statement WHERE date BETWEEN '2020-12-30'::DATE AND '2020-12-30'::DATE
+    const ERRORS = {
+        REPEATED_ITEMS: (repeatedItems) => `Cannot insert ${repeatedItems} statement because similar statement found already exist in database`
+    }
     try{
         console.log('==> Adding statement')
         const { dataSet, statement_type } = req.body
-        // const cq = await db("SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date FROM statement")
-        // BETWEEN query: SELECT date FROM statement WHERE date BETWEEN '2020-12-30'::DATE AND '2020-12-30'::DATE
-        console.log('==> Adding An Entry')
-        if(dataSet.length == 1) {
-            const insertStatementQuery = statement.convertToInsertToStatement(dataSet,statement_type)
-            const rows = await statement.addStatement(db,insertStatementQuery)
-            return res.status(200).json({
-                status: 'success',
-                results: rows
-            })
-        }
-        console.log('==> Adding Bulk Entry')
-        // 1. Scan submitted dataSet, extract date range
-        const isRepeated = await statement.isReapeated(dataSet,db)
-
-        if(isRepeated.repeatedItems == 0) {
+        const duplicateCheckResult = await statement.isRepeated(dataSet,db)
+        
+        if(duplicateCheckResult.repeatedItems == 0) {
+            console.log('==> Adding Entry')
             console.log('==> Data OK! Adding Statement')
             const insertStatementQuery = statement.convertToInsertToStatement(dataSet,statement_type)
             const rows = await statement.addStatement(db,insertStatementQuery)
@@ -51,12 +45,23 @@ app.post('/statement', async (req,res) => {
             })
         } else {
             console.log('==> Data Not OK!')
+            console.log('==> duplicateCheckResult',duplicateCheckResult)
+
+            const nonRepeatedData = dataSet.filter((e,i) => {
+                return duplicateCheckResult.repeatedItemsIndex[i] != i && e
+            })
+
             res.status(200).json({
                 status: 'failed',
-                msg: `Found ${isRepeated.repeatedItems} items already exist`
+                msg: ERRORS.REPEATED_ITEMS(duplicateCheckResult.repeatedItems),
+                nonRepeatedData
             })
         }
     }catch(err) {
+        res.status(200).json({
+            status: 'failed',
+            msg: err
+        })
         console.log(err)
     }
 })
