@@ -39,38 +39,12 @@ app.post('/statement', async (req,res) => {
         }
         console.log('==> Adding Bulk Entry')
         // 1. Scan submitted dataSet, extract date range
-        console.log('Step 1')
-        const range = []
-        const submitedDateRange = dataSet.map(({date,description,withdrawn_amount}, index) => {
-            if(index == 0) {
-                range.push(date.replace('/','-').replace('/','-'))
-            }else if(index == dataSet.length - 1) {
-                range.push(date.replace('/','-').replace('/','-'))
-            }
-            const dataSetKey = `${date.replace('/','-').replace('/','-')}${description}$${withdrawn_amount}`
-            return dataSetKey
-        })
-        console.log('Step 2')
-        // 2. Scan statement database using the extracted data
-        const dateRange = await db(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, withdrawn_amount FROM statement WHERE date BETWEEN '${range[0]}'::DATE AND '${range[1]}'::DATE`)
-        let repeatedItems = 0
-        const nonRepeatedItems = []
-        for(let i = 0; i < dateRange.rows.length; i++) {
-            const {date,description,withdrawn_amount} = dateRange.rows[i]
-            const dbRange = `${date.replace('/','-').replace('/','-')}${description}${withdrawn_amount == '$0.00' ? '$0' : withdrawn_amount}`
-            if(submitedDateRange.includes(dbRange)) {
-                repeatedItems ++
-            } else {
-                nonRepeatedItems.push(submitedDateRange[i])
-            }
-        }
-        console.log('Step 3')
-        // 3. Determine if submitted data already exist in database
-        if(repeatedItems == 0) {
+        const isRepeated = await statement.isReapeated(dataSet,db)
+
+        if(isRepeated.repeatedItems == 0) {
             console.log('==> Data OK! Adding Statement')
             const insertStatementQuery = statement.convertToInsertToStatement(dataSet,statement_type)
             const rows = await statement.addStatement(db,insertStatementQuery)
-            console.log('-->', rows)
             res.status(200).json({
                 status: 'success',
                 results: rows
@@ -79,7 +53,7 @@ app.post('/statement', async (req,res) => {
             console.log('==> Data Not OK!')
             res.status(200).json({
                 status: 'failed',
-                msg: `Found ${repeatedItems} items already exist`
+                msg: `Found ${isRepeated.repeatedItems} items already exist`
             })
         }
     }catch(err) {

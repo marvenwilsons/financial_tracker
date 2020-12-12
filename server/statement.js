@@ -3,6 +3,39 @@ async function addStatement(pgQuery, query) {
     return res.rows
 }
 
+async function isReapeated(dataSet,db) {
+    console.log('==> Checking Database Step 1')
+    const range = []
+    const submitedDateRange = dataSet.map(({date,description,withdrawn_amount}, index) => {
+        if(index == 0) {
+            range.push(date.replace('/','-').replace('/','-'))
+        }else if(index == dataSet.length - 1) {
+            range.push(date.replace('/','-').replace('/','-'))
+        }
+        const dataSetKey = `${date.replace('/','-').replace('/','-')}${description}$${withdrawn_amount}`
+        return dataSetKey
+    })
+    console.log('==> Step 2 Confirming')
+    // 2. Scan statement database using the extracted data
+    const dateRange = await db(`SELECT TO_CHAR(statement.date :: DATE, 'MM-DD-YYYY') AS date, description, withdrawn_amount FROM statement WHERE date BETWEEN '${range[0]}'::DATE AND '${range[1]}'::DATE`)
+    let repeatedItems = 0
+    const nonRepeatedItems = []
+    for(let i = 0; i < dateRange.rows.length; i++) {
+        const {date,description,withdrawn_amount} = dateRange.rows[i]
+        const dbRange = `${date.replace('/','-').replace('/','-')}${description}${withdrawn_amount == '$0.00' ? '$0' : withdrawn_amount}`
+        if(submitedDateRange.includes(dbRange)) {
+            repeatedItems ++
+        } else {
+            nonRepeatedItems.push(submitedDateRange[i])
+        }
+    }
+
+    return {
+        repeatedItems,
+        nonRepeatedItems
+    }
+}
+
 function parse (statement) {
     const ar = statement.slice(statement.indexOf('\n') + 1).split('\n')
     const ar2 = ar.map(e => {
@@ -50,5 +83,6 @@ module.exports = {
     addStatement,
     getInsertIntoStatementQuery,
     parse,
-    convertToInsertToStatement
+    convertToInsertToStatement,
+    isReapeated
 }

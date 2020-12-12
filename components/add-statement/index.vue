@@ -5,7 +5,7 @@
                 <h5 style="color:white; margin:0;" class="flex1" > Add Statement {{addOneEntryMode ? '(One Entry Mode)' : '(Bulk)'}} </h5>
                 <div v-if="dataSet.length == 0" >
                     Paste a CSV bank statement below, 
-                    <a v-if="!addOneEntryMode" @click="addOneEntry" style="color:yellow;">or add one entry</a>
+                    <a v-if="!addOneEntryMode" @click="addOneEntryMode = true" style="color:yellow;">Insert one entry</a>
                     <a v-if="addOneEntryMode" @click="addOneEntryMode = false" style="color:yellow;">back to bulk mode</a>
                 </div>
             </div>
@@ -26,12 +26,12 @@
             <div class="pad050 backgrounderr err" > <span class="marginright025" >Error:</span> {{error}}</div>
         </div>
         <!-- one entry mode -->
-        <singleEntry v-if="addOneEntryMode" />
+        <singleEntry @insertEntry="insertEntry" v-if="addOneEntryMode" />
         <!-- textarea -->
         <textarea v-if="dataSet.length == 0 && addOneEntryMode == false" v-model="csv" style="background:white; height:200px; font-size:11px;" class="fullwidth pad125" />
         <!-- review area -->
         <div v-if="dataSet.length && addOneEntryMode == false" :class="['relative', 'pad125', 'flex', 'flexcol', isReadyToSubmit ? 'isReady' : 'isNotReady','margintop050']" 
-            style="height:550px; border:1px solid #40647b;background:#40647b; overflow-x:hidden;" >
+            style="height:550px; border:1px solid #40647b;background:#26344a; overflow-x:hidden;" >
             
             <div style="max-height:43px;" class="flex spacebetween">
                 <div class="" style="width:30px;"  ># <br> ---- </div>
@@ -40,11 +40,11 @@
                 <div class="" style="width:75px;" >Withdraw <br> --------------</div>
                 <div class="" style="width:75px;"  >Deposit <br> ---------- </div>
                 <div class="" style="width:75px;"  >Balance <br> ----------- </div>
-                <div style="width:140px" >purpose <span v-if="transaction_purpose.tobeCompleted != 0" style="background:red;" class="padleft025 padright025" >
-                    {{transaction_purpose.tobeCompleted}} left</span> <br> ------------------------- 
+                <div style="width:140px" >purpose <span v-if="transaction_purpose.tobeCompleted != 0" style="background:#c81c01;" class="padleft025 padright025" >
+                    <small>{{transaction_purpose.tobeCompleted}} left</small></span> <br> ------------------------- 
                 </div>
             </div>
-            <div :style="{marginTop:'1px', background: problimaticDataIndex.includes(index) ? 'red': ''}" 
+            <div :style="{marginTop:'1px', background: problimaticDataIndex.includes(index) ? '#c81c01': ''}" 
                 class="flex relative itemHover spacebetween" 
                 style="font-size:14px; max-height:23px;" 
                 v-for="(item,index) in dataSet" :key="index" 
@@ -58,30 +58,35 @@
                 </div>
                 <!-- date -->
                 <div class="" style="width:75px;" >
-                    <input style="color:white; width:75px;" @change="inputChange"  :value="item.date" :id="`${index}-date`" type="text">
+                    <input style="color:#c2a242; width:75px;" @change="inputChange"  :value="item.date" :id="`${index}-date`" type="text">
                 </div>
                 <!-- desc -->
                 <div  style="width:200px;" class="" >
-                    <input style="color:white; width:180px;" @change="inputChange"  :value="item.description" :id="`${index}-description`"  type="text">
+                    <input style="color:#c2a242; width:180px;" @change="inputChange"  :value="item.description" :id="`${index}-description`"  type="text">
                 </div>
                 <div style="width:75px;" class=" " >
                     <div class="flex flexcenter" >
-                        <input style="color:white; width:75px;" @change="inputChange" :id="`${index}-withdrawn_amount`" :value="item.withdrawn_amount" type="text">
+                        <span style="margin-right:4px; color: #18cacc;" >$</span>
+                        <input style="color:#afafaf; width:75px;" @change="inputChange" :id="`${index}-withdrawn_amount`" :value="item.withdrawn_amount" type="text">
                     </div>
                 </div>
                 <div style="width:75px;" class=" " >
                     <span class="flex" >
-                        <input style="color:white; width:75px;" @change="inputChange"  :value="item.deposited_amount" :id="`${index}-deposited_amount`" type="text">
+                        <span style="margin-right:4px; color: #18cacc;" >$</span>
+                        <input :style="{color:item.deposited_amount > 0 ? '#0ff769' : '#afafaf', width:'75px',  textShadow: item.deposited_amount > 0 && `1px 1px #27364c`}"
+                        @change="inputChange"  :value="item.deposited_amount" :id="`${index}-deposited_amount`" type="text">
                     </span>
                 </div>
                 <div style="width:75px;" class=" " >
                     <span class="flex" >
-                        <input style="color:white; width:75px;" @change="inputChange"  :value="item.balance_amount" :id="`${index}-balance_amount`" type="text">
+                        <span style="margin-right:4px; color: #18cacc;" >$</span>
+                        <input :style="{color:item.balance_amount > 0 ? '#0ff769' : '#afafaf', width:'75px',  textShadow: item.balance_amount > 0 && `1px 1px #27364c`}"
+                         @change="inputChange"  :value="item.balance_amount" :id="`${index}-balance_amount`" type="text">
                     </span>
                 </div>
-                <div :style="{width:'140px', background: dataSet[index].transaction_purpose == 'none' ? 'red' : '' }" >
-                    <select :id="`${index}-transaction_purpose`" @change="inputChange" style="color:white; width:140px;">
-                        <option value="none" >none</option>
+                <div :style="{width:'140px', background: dataSet[index].transaction_purpose == 'none' ? '#c81c01' : '' }" >
+                    <select :id="`${index}-transaction_purpose`" @change="inputChange" :style="{color:dataSet[index].transaction_purpose == 'none' ? '#afafaf' : 'white' , width:'140px'}">
+                        <option value="none" > &nbsp; none</option>
                         <option value="essential">Essential</option>
                         <option value="grocery">Grocery</option>
                         <option value="food-leisure">Food Leisure</option>
@@ -128,15 +133,16 @@ export default {
             isComplete: false,
             error: undefined
         },
-        addOneEntryMode: false
+        addOneEntryMode: false,
+        isProcessDone: false
     }),
     components: {
         loadingAnimation,
         singleEntry
     },
     methods: {
-        addOneEntry() {
-            this.addOneEntryMode = true
+        insertEntry(payload) {
+
         },
         parse(statement) {
             // const ar = statement.slice(statement.indexOf('\n')).split('\n')
@@ -240,8 +246,9 @@ export default {
         },
         loadingComplete() {
             setTimeout(() => {
-                alert('Upload Complete')
-                location.reload()
+                // alert('Upload Complete')
+                // location.reload()
+                this.isProcessDone = true
             }, 1000);
             console.log("Upload Completed")
         },
