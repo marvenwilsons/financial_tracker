@@ -82,7 +82,7 @@
                 <div :style="{width:'140px', background: dataSet[index].transaction_purpose == 'none' ? 'red' : '' }" >
                     <select :id="`${index}-transaction_purpose`" @change="inputChange" style="color:white; width:140px;">
                         <option value="none" >none</option>
-                        <option value="essential">essential</option>
+                        <option value="essential">Essential</option>
                         <option value="grocery">Grocery</option>
                         <option value="food-leisure">Food Leisure</option>
                         <option value="transportation">Transportation</option>
