@@ -77,7 +77,10 @@
         <div class="flex spacebetween">
             <div class="flex1" >
                 <small style="color:#afafaf" >
-                    MDP: <span style="color:yellow;" >${{creditMaximumPeak}}</span> on August 5, 2020 - credit
+                    MDP: 
+                    <span style="color:yellow;" >{{moneyFormater(creditMaximumPeak.balance_amount)}}</span> on
+                    <span style="color:yellow;" >{{creditMaximumPeak.date}}</span>
+                     - credit
                 </small>
             </div>
             <!-- bottom-option-bar -->
@@ -133,6 +136,23 @@ export default {
         },
         onSettingChange(obj) {
 
+        },
+        moneyFormater(value) {
+            var formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+
+            // These options are needed to round to whole numbers if that's what you want.
+            //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+            //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+            });
+
+            return formatter.format(value)
+        },
+        dateFormater(value,format) {
+            
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            // retunrs MM DD, YYYY
         }
     },
     mounted() {
@@ -258,8 +278,10 @@ export default {
                 description: 'Credit Test 1'
             },)
         }
-        let creditMaximumPeak = rawData.map(e => e.statement_type == 'credit' && e.balance_amount).sort((a,b) => b - a)[0]
-        this.creditMaximumPeak = creditMaximumPeak
+        const creditMaximumPeak = rawData.map(e => e.statement_type == 'credit' && e.balance_amount).sort((a,b) => b - a)[0]
+        const creditMaximumPeakObject = rawData.filter(e => e.balance_amount == creditMaximumPeak)[0]
+        this.creditMaximumPeak = creditMaximumPeakObject
+
 
         let assetMaximumPeak = rawData.map(e => e.statement_type == 'debit' && e.balance_amount).sort((a,b) => b - a)[0]
         this.assetMaximumPeak = assetMaximumPeak
