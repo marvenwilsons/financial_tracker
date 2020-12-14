@@ -3,8 +3,8 @@
         <div class="fullwidth marginright050" >
             <small>
                 <span style="color:#afafaf;" >Coverage:</span> 
-                <span style="color:yellow" >(50 days) - Aug 1, 2019</span> - 
-                <span style="color:yellow" >Aug 1, 2019</span>
+                <span style="color:yellow" >(50 days) <span style="color:#afafaf;" >From:</span> Aug 1, 2019</span> 
+                <span style="color:yellow" >  <span style="color:#afafaf;" >To:</span> Aug 1, 2019</span>
             </small>
         </div>
         <div class="" >

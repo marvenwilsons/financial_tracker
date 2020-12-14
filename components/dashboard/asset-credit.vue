@@ -39,7 +39,8 @@
         <div class="flex spacebetween">
             <div>
                 <small style="color:#afafaf" >
-                    MUP: <span style="color:yellow;" >${{assetMaximumPeak}}</span> on August 5, 2020 - asset
+                    MUP: <span style="color:yellow;" >{{moneyFormater(assetMaximumPeak.balance_amount)}}</span> on 
+                    <span style="color:yellow;" >{{assetMaximumPeak.date}}</span> - asset
                 </small>
             </div>
             <div @click="openSettings" class="pointer" >
@@ -284,7 +285,8 @@ export default {
 
 
         let assetMaximumPeak = rawData.map(e => e.statement_type == 'debit' && e.balance_amount).sort((a,b) => b - a)[0]
-        this.assetMaximumPeak = assetMaximumPeak
+        const assetMaximumPeakObject = rawData.filter(e => e.balance_amount == assetMaximumPeak)[0]
+        this.assetMaximumPeak = assetMaximumPeakObject
 
         // credit
         rawData.map(item => {
