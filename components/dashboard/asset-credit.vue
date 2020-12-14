@@ -1,15 +1,48 @@
 <template>
-    <div class="fullwidth widgetsection pad125 borderRad4" >
+    <div class="fullwidth widgetsection pad125 borderRad4 relative" >
+        <v-expand-transition>
+            <div v-if="openSetting" style="z-index:200; top:-10px;" class="absolute fullwidth fullheight-percent flex flexcenter">
+                <v-expand-transition>
+                    <div 
+                    transition="scroll-y-reverse-transition" 
+                    style="background:whitesmoke; color:black;max-width:500px; height:300px;" 
+                    class="borderRad4 flex flexcol" 
+                    >
+                        <div style="background: #afafaf" class="fullwidth flex spacebetween pad025 padleft050" >
+                            <small>
+                                <strong style="color:#26344a">
+                                Settings
+                                </strong>
+                            </small>
+                            <small @click="openSetting = false" class="pointer" >
+                                <v-icon small >mdi-close</v-icon>
+                            </small>
+                        </div> 
+                        <div class="pad050 fullheight-percent" >
+                            <settings @onSettingChange="onSettingChange" />
+                        </div>
+                        <div style="border-top: 1px solid lightgray;" class="flex flexend pad050 padright050 " >
+                            <button class="borderRad4" style="background:#afafaf;" >
+                                <small style="color:#26344a" class="padleft025 padright025 borderRad4" >
+                                    Apply
+                                </small>
+                            </button>
+                        </div>
+                    </div>
+                </v-expand-transition>
+            </div>
+        </v-expand-transition>
+
         <div style="color: #afafaf" class="flex flexcenter marginbottom125" >
             Asset VS Credit
         </div>
         <div class="flex spacebetween">
             <div>
                 <small style="color:#afafaf" >
-                    MP: <span style="color:yellow;" >$4,250</span> on August 5, 2020 - asset
+                    MUP: <span style="color:yellow;" >${{assetMaximumPeak}}</span> on August 5, 2020 - asset
                 </small>
             </div>
-            <div class="pointer" >
+            <div @click="openSettings" class="pointer" >
                 ⚙️ 
             </div>
         </div>
@@ -17,7 +50,7 @@
         <!--  -->
         <div style="height:250px; align-items:center; overflow:hidden;" class="relative flex" >
             <div style="height:95%; z-index:1" class="absolute flex flexcenter" >
-               <small>
+               <small style="color:#afafaf" >
                     0
                </small>
             </div>
@@ -33,7 +66,7 @@
                         <div v-for="(item,index) in statements" :key="index" class="relative bar-parent fullheight-percent flex" >
                             <barInfo
                              :item="item" />
-                            <bar :item="item" />
+                            <bar :index="index" :item="item" />
                         </div>
                         <!-- end -->
                     </div>
@@ -44,7 +77,7 @@
         <div class="flex spacebetween">
             <div class="flex1" >
                 <small style="color:#afafaf" >
-                    MP: <span style="color:yellow;" >$4,250</span> on August 5, 2020 - credit
+                    MDP: <span style="color:yellow;" >${{creditMaximumPeak}}</span> on August 5, 2020 - credit
                 </small>
             </div>
             <!-- bottom-option-bar -->
@@ -61,15 +94,21 @@
 import bar from '@/components/asset-credit/bar'
 import bottomOptionBar from '@/components/asset-credit/bottom-action-bar'
 import barInfo from '@/components/asset-credit/bar-info'
+import settings from '@/components/asset-credit/settings'
+
 export default {
     components: {
         bar,
         bottomOptionBar,
-        barInfo
+        barInfo,
+        settings
     },
     data: () => ({
         statements: [],
         barMove: 0,
+        creditMaximumPeak: 0,
+        assetMaximumPeak: 0,
+        openSetting: false
     }),
     methods: {
         scroll(mode) {
@@ -88,6 +127,12 @@ export default {
                     }
                 }
             }
+        },
+        openSettings() {
+            this.openSetting = true
+        },
+        onSettingChange(obj) {
+
         }
     },
     mounted() {
@@ -168,7 +213,7 @@ export default {
             //
             {
                 statement_type: 'debit',
-                date: '',
+                date: '05/05/2020',
                 withdrawn_amount: 300,
                 deposited_amount: 0,
                 balance_amount: 2000,
@@ -176,7 +221,7 @@ export default {
             },
             {
                 statement_type: 'debit',
-                date: '',
+                date: '05/05/2020',
                 withdrawn_amount: 300,
                 deposited_amount: 0,
                 balance_amount: 1900,
@@ -184,7 +229,7 @@ export default {
             },
             {
                 statement_type: 'debit',
-                date: '',
+                date: '05/05/2020',
                 withdrawn_amount: 300,
                 deposited_amount: 0,
                 balance_amount: 1800,
@@ -203,8 +248,7 @@ export default {
         const parsedDataSet = []
 
         // for credit
-        let assetMaximumPeak = 0
-        for(let i = 0; i < 191; i++) {
+        for(let i = 0; i < 98; i++) {
             rawData.push( {
                 statement_type: 'credit',
                 date: '05/05/2020',
@@ -215,14 +259,29 @@ export default {
             },)
         }
         let creditMaximumPeak = rawData.map(e => e.statement_type == 'credit' && e.balance_amount).sort((a,b) => b - a)[0]
+        this.creditMaximumPeak = creditMaximumPeak
 
+        let assetMaximumPeak = rawData.map(e => e.statement_type == 'debit' && e.balance_amount).sort((a,b) => b - a)[0]
+        this.assetMaximumPeak = assetMaximumPeak
+
+        // credit
         rawData.map(item => {
-            parsedDataSet.push({
-                height: Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)),
-                statement_type: item.statement_type,
-                date: item.date,
-                balance_amount: Math.round(item.balance_amount),
-            })
+            if(item.statement_type == 'credit') {
+                parsedDataSet.push({
+                    height: Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)),
+                    statement_type: item.statement_type,
+                    date: item.date,
+                    balance_amount: Math.round(item.balance_amount),
+                })
+            } else {
+                parsedDataSet.push({
+                    height: Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)),
+                    statement_type: item.statement_type,
+                    date: item.date,
+                    balance_amount: Math.round(item.balance_amount),
+                })
+            }
+            
         })
 
         this.statements = parsedDataSet

@@ -9,8 +9,8 @@
             <div 
                 class="bar pointer" 
                 :style="{
-                    height: `${item.height}%`, 
-                    width:`5px`,
+                    height: `${height}%`, 
+                    width:`10px`,
                     borderBottom:'1px solid #be5a4b',
                     background: item.statement_type == 'credit' ? '#c81c01' : '#3fd140', 
                     alignSelf: item.statement_type == 'debit' && 'flex-end'
@@ -22,7 +22,20 @@
 
 <script>
 export default {
-    props: ['item']
+    props: ['item', 'index'],
+    data: () => ({
+        height: 0
+    }),
+    mounted() {
+        const incrementHeight = setInterval(() => {
+            if(this.height != this.item.height) {
+                const addAmount = this.item.height / 8
+                this.height = this.height + addAmount
+            } else {
+                clearInterval(incrementHeight)
+            }
+        },this.index)
+    }
 }
 </script>
 
