@@ -16,7 +16,7 @@
             <div>
                 <small style="color:#afafaf" >
                     MUP: <span style="color:yellow;" >{{moneyFormater(assetMaximumPeak.balance_amount)}}</span> on 
-                    <span style="color:yellow;" >{{assetMaximumPeak.date}}</span> - asset
+                    <span style="color:yellow;" > {{dateFormater(assetMaximumPeak.date,'YYYY/MM/DD')}} </span> - asset
                 </small>
             </div>
             <div 
@@ -58,7 +58,7 @@
                 <small style="color:#afafaf" >
                     MDP: 
                     <span style="color:yellow;" >{{moneyFormater(creditMaximumPeak.balance_amount)}}</span> on
-                    <span style="color:yellow;" >{{creditMaximumPeak.date}}</span>
+                    <span style="color:yellow;" >{{dateFormater(creditMaximumPeak.date,'YYYY/MM/DD')}}</span>
                      - credit
                 </small>
             </div>
@@ -66,6 +66,7 @@
             <bottomOptionBar
                 @scrollToLeft="scroll('left')"
                 @scrollToRight="scroll('right')"
+                :StatementDataSet="statements"
              />
         </div>
 
@@ -136,10 +137,15 @@ export default {
 
             return formatter.format(value)
         },
-        dateFormater(value,format) {
+        dateFormater(value,formatOrigin) {
+            const formatOriginYear = formatOrigin.split('/').indexOf('YYYY')
+            const formatOriginMonth = formatOrigin.split('/').indexOf('MM')
+            const formatOriginDay = formatOrigin.split('/').indexOf('DD')
+            const sliceValue = value.split('/')
             
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            // retunrs MM DD, YYYY
+            const final = `${ months[parseInt(sliceValue[formatOriginMonth]) - 1] } ${sliceValue[formatOriginDay]}, ${sliceValue[formatOriginYear]}`
+            return final
         }
     },
     mounted() {
@@ -169,14 +175,14 @@ export default {
                 parsedDataSet.push({
                     height: Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)),
                     statement_type: item.statement_type,
-                    date: item.date,
+                    date: this.dateFormater(item.date,'YYYY/MM/DD'),
                     balance_amount: Math.round(item.balance_amount),
                 })
             } else {
                 parsedDataSet.push({
                     height: Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)),
                     statement_type: item.statement_type,
-                    date: item.date,
+                    date: this.dateFormater(item.date,'YYYY/MM/DD'),
                     balance_amount: Math.round(item.balance_amount),
                 })
             }

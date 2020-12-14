@@ -3,8 +3,12 @@
         <div class="fullwidth marginright050" >
             <small>
                 <span style="color:#afafaf;" >Coverage:</span> 
-                <span style="color:yellow" >(50 days) <span style="color:#afafaf;" >From:</span> Aug 1, 2019</span> 
-                <span style="color:yellow" >  <span style="color:#afafaf;" >To:</span> Aug 1, 2019</span>
+                <span style="color:yellow" >({{StatementDataSet.length}} Days) <span style="color:#afafaf;" >
+                    From:</span> {{StatementDataSet[0].date}}
+                </span> 
+                <span style="color:yellow" >  <span style="color:#afafaf;" >
+                    To:</span> {{StatementDataSet[StatementDataSet.length - 1].date}}
+                </span>
             </small>
         </div>
         <div class="" >
@@ -22,6 +26,7 @@
 
 <script>
 export default {
+    props: ['StatementDataSet'],
     data: () => ({
         stopScrolling: false
     }),
