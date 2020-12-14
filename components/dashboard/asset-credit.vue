@@ -1,37 +1,13 @@
 <template>
     <div class="fullwidth widgetsection pad125 borderRad4 relative" >
-        <v-expand-transition>
-            <div v-if="openSetting" style="z-index:200; top:-10px;" class="absolute fullwidth fullheight-percent flex flexcenter">
-                <v-expand-transition>
-                    <div 
-                    transition="scroll-y-reverse-transition" 
-                    style="background:whitesmoke; color:black;max-width:500px; height:300px;" 
-                    class="borderRad4 flex flexcol" 
-                    >
-                        <div style="background: #afafaf" class="fullwidth flex spacebetween pad025 padleft050" >
-                            <small>
-                                <strong style="color:#26344a">
-                                Settings
-                                </strong>
-                            </small>
-                            <small @click="openSetting = false" class="pointer" >
-                                <v-icon small >mdi-close</v-icon>
-                            </small>
-                        </div> 
-                        <div class="pad050 fullheight-percent" >
-                            <settings @onSettingChange="onSettingChange" />
-                        </div>
-                        <div style="border-top: 1px solid lightgray;" class="flex flexend pad050 padright050 " >
-                            <button class="borderRad4" style="background:#afafaf;" >
-                                <small style="color:#26344a" class="padleft025 padright025 borderRad4" >
-                                    Apply
-                                </small>
-                            </button>
-                        </div>
-                    </div>
-                </v-expand-transition>
-            </div>
-        </v-expand-transition>
+        <!-- settings -->
+        <DonqueSettingComponent ref="setting" >
+            <template v-slot:selected="{ selected }">
+                <AssetCreditCoverageSetting  v-if="selected == 'Coverage'" />
+                <AssetCreditBarSetting       v-if="selected == 'Bar'" />
+                <AssetCreditDataDisplay      v-if="selected == 'Data Display'"/>
+            </template>
+        </DonqueSettingComponent>
 
         <div style="color: #afafaf" class="flex flexcenter marginbottom125" >
             Asset VS Credit
@@ -43,7 +19,9 @@
                     <span style="color:yellow;" >{{assetMaximumPeak.date}}</span> - asset
                 </small>
             </div>
-            <div @click="openSettings" class="pointer" >
+            <div 
+                @click="() =>  $refs.setting.toggle(['Coverage', 'Data Display', 'Bar'])" 
+                class="pointer" >
                 ⚙️ 
             </div>
         </div>
@@ -98,14 +76,22 @@
 import bar from '@/components/asset-credit/bar'
 import bottomOptionBar from '@/components/asset-credit/bottom-action-bar'
 import barInfo from '@/components/asset-credit/bar-info'
-import settings from '@/components/asset-credit/settings'
+import DonqueSettingComponent from '@/components/settings-pane/window'
+
+import AssetCreditCoverageSetting from '@/components/asset-credit/settings/coverage'
+import AssetCreditBarSetting from '@/components/asset-credit/settings/bar'
+import AssetCreditDataDisplay from '@/components/asset-credit/settings/data-display'
 
 export default {
+    props: ['StatementDataSet'],
     components: {
         bar,
         bottomOptionBar,
         barInfo,
-        settings
+        DonqueSettingComponent,
+        AssetCreditCoverageSetting,
+        AssetCreditBarSetting,
+        AssetCreditDataDisplay
     },
     data: () => ({
         statements: [],
@@ -158,108 +144,7 @@ export default {
     },
     mounted() {
         this.statements = []
-        const rawData = [
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 14.99,
-                deposited_amount: 0,
-                balance_amount: 4243.61,
-                description: 'Credit Test 1'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 34.75,
-                deposited_amount: 0,
-                balance_amount: 4278.36,
-                description: 'Credit Test 2'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 4293.96,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 5293.96,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 3100,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 2100,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 1100,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 900,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 100,
-                description: 'Credit Test 3'
-            },
-            //
-            {
-                statement_type: 'debit',
-                date: '05/05/2020',
-                withdrawn_amount: 300,
-                deposited_amount: 0,
-                balance_amount: 2000,
-                description: 'Debit Test 1'
-            },
-            {
-                statement_type: 'debit',
-                date: '05/05/2020',
-                withdrawn_amount: 300,
-                deposited_amount: 0,
-                balance_amount: 1900,
-                description: 'Debit Test 2'
-            },
-            {
-                statement_type: 'debit',
-                date: '05/05/2020',
-                withdrawn_amount: 300,
-                deposited_amount: 0,
-                balance_amount: 1800,
-                description: 'Debit Test 3'
-            }
-        ]
-
-        // fetch statements
-
+        const rawData= this.StatementDataSet
 
         const findPercenOfTotal = (totalValue, numberVsTotal) => {
             const a = numberVsTotal / totalValue
@@ -269,16 +154,6 @@ export default {
         const parsedDataSet = []
 
         // for credit
-        for(let i = 0; i < 98; i++) {
-            rawData.push( {
-                statement_type: 'credit',
-                date: '05/05/2020',
-                withdrawn_amount: 14.99,
-                deposited_amount: 0,
-                balance_amount: 4243.61 + (i * 100),
-                description: 'Credit Test 1'
-            },)
-        }
         const creditMaximumPeak = rawData.map(e => e.statement_type == 'credit' && e.balance_amount).sort((a,b) => b - a)[0]
         const creditMaximumPeakObject = rawData.filter(e => e.balance_amount == creditMaximumPeak)[0]
         this.creditMaximumPeak = creditMaximumPeakObject

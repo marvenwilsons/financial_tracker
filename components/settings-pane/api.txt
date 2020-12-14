@@ -1,0 +1,10 @@
+note
+setting is position absolute so the parent must be relative
+
+methods
+-------
+toggle - opens and closes setting, takes menu array as a fn arg
+
+property
+--------
+menu - list of menu bar
