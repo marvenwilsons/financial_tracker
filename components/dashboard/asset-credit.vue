@@ -99,7 +99,8 @@ export default {
         barMove: 0,
         creditMaximumPeak: 0,
         assetMaximumPeak: 0,
-        openSetting: false
+        openSetting: false,
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     }),
     methods: {
         scroll(mode) {
@@ -138,14 +139,19 @@ export default {
             return formatter.format(value)
         },
         dateFormater(value,formatOrigin) {
-            const formatOriginYear = formatOrigin.split('/').indexOf('YYYY')
-            const formatOriginMonth = formatOrigin.split('/').indexOf('MM')
-            const formatOriginDay = formatOrigin.split('/').indexOf('DD')
-            const sliceValue = value.split('/')
+            if(value) {
+                const formatOriginYear = formatOrigin.split('/').indexOf('YYYY')
+                const formatOriginMonth = formatOrigin.split('/').indexOf('MM')
+                const formatOriginDay = formatOrigin.split('/').indexOf('DD')
+                const sliceValue = value.split('/')
+                
+                const months = this.months
+                const final = `${ months[parseInt(sliceValue[formatOriginMonth]) - 1] } ${sliceValue[formatOriginDay]}, ${sliceValue[formatOriginYear]}`
+                return final
+            } else {
+                return value
+            }
             
-            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            const final = `${ months[parseInt(sliceValue[formatOriginMonth]) - 1] } ${sliceValue[formatOriginDay]}, ${sliceValue[formatOriginYear]}`
-            return final
         }
     },
     mounted() {

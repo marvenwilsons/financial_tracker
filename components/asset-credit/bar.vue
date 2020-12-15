@@ -7,7 +7,7 @@
     >
         <div class="flex fullheight-percent" >
             <div 
-                class="bar pointer" 
+                class="bar pointer smthw" 
                 :style="{
                     height: `${height}%`, 
                     width:`10px`,
@@ -31,10 +31,12 @@ export default {
             if(this.height != this.item.height) {
                 const addAmount = this.item.height / 8
                 this.height = this.height + addAmount
+                // this.height = this.item.height
+
             } else {
                 clearInterval(incrementHeight)
             }
-        },this.index)
+        },this.index * 10)
     }
 }
 </script>
@@ -47,5 +49,8 @@ export default {
 .date{
     bottom: 0;
     transform: rotate(60deg);
+}
+.smthw {
+    transition: 1s;
 }
 </style>

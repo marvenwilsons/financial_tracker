@@ -1,6 +1,6 @@
 <template>
-    <div class="flex spacebetween flexcenter" >
-        <div class="fullwidth marginright050" >
+    <div v-if="StatementDataSet.length" class="flex spacebetween flexcenter" >
+        <div class="fullwidth marginleft125" >
             <small>
                 <span style="color:#afafaf;" >Coverage:</span> 
                 <span style="color:yellow" >({{StatementDataSet.length}} Days) <span style="color:#afafaf;" >

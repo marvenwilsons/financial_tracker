@@ -20,104 +20,19 @@ export default {
     },
     data: () => ({
         rawData: [
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 14.99,
-                deposited_amount: 0,
-                balance_amount: 4243.61,
-                description: 'Credit Test 1'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 34.75,
-                deposited_amount: 0,
-                balance_amount: 4278.36,
-                description: 'Credit Test 2'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 4293.96,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 5293.96,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 3100,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 2100,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 1100,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 900,
-                description: 'Credit Test 3'
-            },
-            {
-                statement_type: 'credit',
-                date,
-                withdrawn_amount: 15.60,
-                deposited_amount: 0,
-                balance_amount: 100,
-                description: 'Credit Test 3'
-            },
-            //
-            {
-                statement_type: 'debit',
-                date,
-                withdrawn_amount: 300,
-                deposited_amount: 0,
-                balance_amount: 2000,
-                description: 'Debit Test 1'
-            },
-            {
-                statement_type: 'debit',
-                date,
-                withdrawn_amount: 300,
-                deposited_amount: 0,
-                balance_amount: 1900,
-                description: 'Debit Test 2'
-            },
-            {
-                statement_type: 'debit',
-                date,
-                withdrawn_amount: 300,
-                deposited_amount: 0,
-                balance_amount: 1800,
-                description: 'Debit Test 3'
-            }
         ]
-    })
+    }),
+    created() {
+        for(var i = 0; i < 130; i++) {
+            this.rawData.push({
+                statement_type: Math.round(Math.random(i) * 100) < 50 ? 'debit' : 'credit',
+                date,
+                withdrawn_amount: 100 * Math.round(Math.random(i) * Math.random(i) * 3),
+                deposited_amount: 0,
+                balance_amount: 100 * Math.round(Math.random(i) * Math.random(i) * 3),
+                description: 'Credit Test 3'
+            })
+        }
+    }
 }
 </script>
