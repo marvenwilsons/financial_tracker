@@ -7,16 +7,26 @@ const { isReapeated } = require('./statement')
 
 app.use(express.json())
 // get all credit statements
-app.get('/statement/credit' ,(req,res) => {
-    
+app.get('/statement/credit' , async (req,res) => {
+    const res = db(`SELECT * FROM statement WHERE statement_type = 'credit' ORDER BY date DESC`)
 
 })
 // get all debit staements
-app.get('/statement/debit' ,(req,res) => {
-    // const insertStatementQuery = statement.getInsertIntoStatementQuery(sampleStatement, 'debit')
-    // const x = statement.addStatement(query,insertStatementQuery)
+app.get('/statement/debit' , async (req,res) => {
+    const res = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
+    res.status(200).json({
+        status: 'success',
+        results: res.rows
+    })
 })
 // get all 
+app.get('/statement' , async (req,res) => {
+    const res = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
+    res.status(200).json({
+        status: 'success',
+        results: res.rows
+    })
+})
 // get a specific statement
 app.get('/statement/:from_to', (req,res) => {
     // from_to is a point on time, ei: August 1 - October 1
