@@ -36,7 +36,7 @@ export default {
             } else {
                 clearInterval(incrementHeight)
             }
-        },this.index * 10)
+        },this.index)
     }
 }
 </script>
@@ -44,7 +44,7 @@ export default {
 <style scoped>
 .bar:hover {
     /* border: 1px solid yellow; */
-    transition: 300ms;
+    transition: 100ms;
 }
 .date{
     bottom: 0;

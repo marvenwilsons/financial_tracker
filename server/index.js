@@ -8,23 +8,23 @@ const { isReapeated } = require('./statement')
 app.use(express.json())
 // get all credit statements
 app.get('/statement/credit' , async (req,res) => {
-    const res = db(`SELECT * FROM statement WHERE statement_type = 'credit' ORDER BY date DESC`)
+    // const res = db(`SELECT * FROM statement WHERE statement_type = 'credit' ORDER BY date DESC`)
 
 })
 // get all debit staements
 app.get('/statement/debit' , async (req,res) => {
-    const res = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
+    const result = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
     res.status(200).json({
         status: 'success',
-        results: res.rows
+        results: result.rows
     })
 })
 // get all 
 app.get('/statement' , async (req,res) => {
-    const res = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
+    const result = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
     res.status(200).json({
         status: 'success',
-        results: res.rows
+        results: result.rows
     })
 })
 // get a specific statement

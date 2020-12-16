@@ -5,9 +5,9 @@
         <section class="s" >
             <AssetCreditComponent :StatementDataSet="rawData" />
         </section>
-        <!-- sec1: total spending of all transaction from first statement to latest -->
-        <!-- sec2: select statements to analyze -->
-        <!-- sec3: dept vs asset chart -->
+        <!-- sec: dept vs asset chart -->
+        <!-- sec: total spending of all transaction for this month -->
+        <!-- sec: get pre authorized transaction days  -->
     </div>
 </template>
 
@@ -23,13 +23,13 @@ export default {
         ]
     }),
     created() {
-        for(var i = 0; i < 130; i++) {
+        for(var i = 0; i < 230; i++) {
             this.rawData.push({
                 statement_type: Math.round(Math.random(i) * 100) < 50 ? 'debit' : 'credit',
                 date,
                 withdrawn_amount: 100 * Math.round(Math.random(i) * Math.random(i) * 3),
                 deposited_amount: 0,
-                balance_amount: 100 * Math.round(Math.random(i) * Math.random(i) * 3),
+                balance_amount: Math.random(i) * Math.round(Math.random(i) * Math.ceil(Math.random(i)) * 3),
                 description: 'Credit Test 3'
             })
         }
