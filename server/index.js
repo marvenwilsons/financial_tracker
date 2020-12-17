@@ -21,7 +21,7 @@ app.get('/statement/debit' , async (req,res) => {
 })
 // get all 
 app.get('/statement' , async (req,res) => {
-    const result = db(`SELECT * FROM statement WHERE statement_type = 'debit' ORDER BY date DESC`)
+    const result = await db(`SELECT * FROM statement ORDER BY date ASC`)
     res.status(200).json({
         status: 'success',
         results: result.rows
@@ -76,6 +76,15 @@ app.post('/statement', async (req,res) => {
     }
 })
 
+
+app.delete('/statement/:id', async (req,res) => {
+    // Delete one statement
+})
+
+// Bulk delete
+app.delete('/statement/:prop', async (req, res) => {
+    // DELETE FROM statement WHERE id IN (SELECT id FROM statement WHERE statement_type = 'deposit');
+})
 // app.listen(5000,() => {
 //     console.log('Node Sever running')
 // })

@@ -15,8 +15,8 @@
         <div class="flex spacebetween">
             <div>
                 <small style="color:#afafaf" >
-                    MUP: <span style="color:yellow;" >{{moneyFormater(assetMaximumPeak.balance_amount)}}</span> on 
-                    <span style="color:yellow;" > {{dateFormater(assetMaximumPeak.date,'YYYY/MM/DD')}} </span> - asset
+                    MUP: <span style="color:yellow;" >{{assetMaximumPeak ? moneyFormater(assetMaximumPeak.balance_amount) : 'N/A'}}</span> on 
+                    <span style="color:yellow;" > {{assetMaximumPeak ? dateFormater(assetMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}} </span> - asset
                 </small>
             </div>
             <div 
@@ -44,7 +44,8 @@
                         <!-- bar item -->
                         <div v-for="(item,index) in statements" :key="index" class="relative bar-parent fullheight-percent flex" >
                             <barInfo
-                             :item="item" />
+                             :item="item"
+                             :moneyFormater="moneyFormater" />
                             <bar :index="index" :item="item" />
                         </div>
                         <!-- end -->
@@ -54,11 +55,11 @@
         </div>
         <!--  -->
         <div class="flex spacebetween">
-            <div class="flex1" >
+            <div class="flex2" >
                 <small style="color:#afafaf" >
                     MDP: 
-                    <span style="color:yellow;" >{{moneyFormater(creditMaximumPeak.balance_amount)}}</span> on
-                    <span style="color:yellow;" >{{dateFormater(creditMaximumPeak.date,'YYYY/MM/DD')}}</span>
+                    <span style="color:yellow;" > {{creditMaximumPeak ? moneyFormater(creditMaximumPeak.balance_amount) : 'N/A'}}</span> on
+                    <span style="color:yellow;" >{{creditMaximumPeak ? dateFormater(creditMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}}</span>
                      - credit
                 </small>
             </div>
@@ -109,7 +110,7 @@ export default {
 
             if(barParent.offsetWidth > 882) {
                 if(mode == 'right') {
-                    const stopCondition = (Math.abs(this.barMove) + 750) > barParent.offsetWidth
+                    const stopCondition = (Math.abs(this.barMove) + 550) > barParent.offsetWidth
                     if(stopCondition == false) {
                         this.barMove = this.barMove - 40
                     }
@@ -152,6 +153,84 @@ export default {
                 return value
             }
             
+        },
+        getTotalDaysOfMonth(month,yearEndVal) {
+            function isEven(value) {
+                if(value == 0 || value == '00') {
+                    return true
+                } else {
+                    if (value%2 == 0)
+                        return true;
+                    else
+                        return false;
+                }
+                
+            }                                                                                                                       
+            switch(month) {
+                case 'Jan':
+                    return 31
+                case 'Feb':
+                    return  isEven(yearEndVal) ? 29 : 28
+                case 'Mar':
+                    return 31
+                case 'Apr':
+                    return 30
+                case 'May':
+                    return 31
+                case 'Jun':
+                    return 30
+                case 'Jul':
+                    return 31
+                case 'Aug':
+                    return 31
+                case 'Sep':
+                    return 30
+                case 'Oct':
+                    return 31
+                case 'Nov':
+                    return 30
+                case 'Dec':
+                    return 31
+            }
+        },
+        getCalendar(year) {
+            // fill the gaps
+            const monthsWithExpectedDays = {Jan:[],Feb:[],Mar:[],Apr:[],May:[],Jun:[],Jul:[],Aug:[],Sep:[],Oct:[],Nov:[],Dec:[]}
+
+            for(const key in monthsWithExpectedDays) {
+                for(var i = 0; i < this.getTotalDaysOfMonth(key); i++) {
+                    monthsWithExpectedDays[key].push(`${key} ${(i + 1) < 10 ? `0${i + 1}` : `${i + 1}`}, ${year}`)
+                }
+            }
+            return monthsWithExpectedDays
+        },
+        getMonthIndex(month) {
+            switch(month) {
+                case 'Jan':
+                    return 0
+                case 'Feb':
+                    return 1
+                case 'Mar':
+                    return 2
+                case 'Apr':
+                    return 3
+                case 'May':
+                    return 4
+                case 'Jun':
+                    return 5
+                case 'Jul':
+                    return 6
+                case 'Aug':
+                    return 7
+                case 'Sep':
+                    return 8
+                case 'Oct':
+                    return 9
+                case 'Nov':
+                    return 10
+                case 'Dec':
+                    return 11
+            }
         }
     },
     mounted() {
@@ -176,26 +255,113 @@ export default {
         this.assetMaximumPeak = assetMaximumPeakObject
 
         // credit
+        const scannedYears = []
         rawData.map(item => {
-            if(item.statement_type == 'credit') {
-                parsedDataSet.push({
-                    height: Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(creditMaximumPeak,item.balance_amount)),
-                    statement_type: item.statement_type,
-                    date: this.dateFormater(item.date,'YYYY/MM/DD'),
-                    balance_amount: Math.round(item.balance_amount),
-                })
-            } else {
-                parsedDataSet.push({
-                    height: Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)),
-                    statement_type: item.statement_type,
-                    date: this.dateFormater(item.date,'YYYY/MM/DD'),
-                    balance_amount: Math.round(item.balance_amount),
-                })
+            const year = item.date.split('/')[0]
+            if(scannedYears.includes(year) == false) {
+                scannedYears.push(year)
             }
-            
+
+            parsedDataSet.push({
+                // height: Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)),
+                statement_type: item.statement_type,
+                date: this.dateFormater(item.date,'YYYY/MM/DD'),
+                balance_amount: Math.round(item.balance_amount),
+                withdrawn_amount: item.withdrawn_amount,
+                deposited_amount: item.deposited_amount
+            })
         })
 
         this.statements = parsedDataSet
+
+        const template = {}
+        
+        // create tenplate using the year(s) used in dataSet
+        scannedYears.map(year => {
+            const calendar = this.getCalendar(year)
+            for(const month in calendar) {
+                calendar[month].map(day => {
+                    template[day] = {
+                        statements: {
+                            credit: {
+                                highestAmountOfTheDay:0,
+                                lowestAmountOfTheDay: 0,
+                                items: []
+                            },
+                            debit: {
+                                highestAmountOfTheDay:0,
+                                lowestAmountOfTheDay: 0,
+                                items: []
+                            },
+                        },
+                        report: {
+                            date: `${month} ${day.split(' ')[1].replace(',','')}, ${year}`,
+                            monthOf: month,
+                            yearOf: parseInt(year),
+                            dayOf: parseInt(day.split(' ')[1].replace(',','')),
+                            monthIndex: this.getMonthIndex(month),
+                            finalAssetValue: 0,
+                            finalDeptValue: 0,
+                            initialAssetAmount: 0,
+                            initialDeptAmount: 0,
+                            hasActivity: false,
+                            statementInheritDate: null,
+                            totalWithdrawnAmount: 0
+                        }
+                    }
+                })
+            }
+        })
+
+        // populate template with statement using date
+        parsedDataSet.map(e => {
+            if(e.statement_type == 'credit') {
+                template[e.date].statements.credit.items.push(e)
+            } else {
+                template[e.date].statements.debit.items.push(e)
+            }
+        })
+
+        // mark days without activity
+        for(const item in template) {
+            if(template[item].statements.length != 0) {
+                template[item].report.hasActivity = true
+            }
+        }
+
+        const finalDataSet = []
+
+        // sort data
+        scannedYears.map(year => {
+            for(var i = 0; i < 12; i++) {
+                for(const item in template) {
+                    if(template[item].report.yearOf == year) {
+                        if(template[item].report.monthIndex == i) {
+                            finalDataSet.push(template[item])
+                        }
+                    }
+                }
+            }
+        })
+
+        // set statementInheritDate property
+        for(var i = 0; i < finalDataSet.length; i ++) {
+            if(i != 0) {
+                finalDataSet[i].report.statementInheritDate = finalDataSet[i - 1].report.date
+            }
+
+            // set initialAssetAmount, initialDeptAmount, totalWithdrawnAmount
+            if(finalDataSet[i].statements.length != 0) {
+                if(finalDataSet[i].statements.debit.items.length != 0) {
+                    console.log(finalDataSet[i].statements.debit)
+                }
+            }
+        }
+
+        
+        // console.log(finalDataSet)
+
+
     }
 }
 </script>

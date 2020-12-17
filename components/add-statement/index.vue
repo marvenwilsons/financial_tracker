@@ -97,7 +97,8 @@
                 <div style="width:75px;" class=" " >
                     <div class="flex flexcenter" >
                         <span style="margin-right:4px; color: #18cacc;" >$</span>
-                        <input style="color:#afafaf; width:75px;" @change="inputChange" :id="`${index}-withdrawn_amount`" :value="item.withdrawn_amount" type="text">
+                        <input :style="{color:item.withdrawn_amount > 0 ? 'red' : '#afafaf', width:'75px',  textShadow: item.withdrawn_amount > 0 && `1px 1px green;`}"
+                        @change="inputChange" :id="`${index}-withdrawn_amount`" :value="item.withdrawn_amount" type="text">
                     </div>
                 </div>
                 <div style="width:75px;" class=" " >
@@ -133,6 +134,12 @@
                         <option value="life-insurance">Life Insurerance</option>
                         <option value="phone-monthly-fee">Phone Monthly Fee</option>
                         <option value="interest-fee">Interest Fee</option>
+                        <option value="monthly-rent">Monthly Rent</option>
+                        <option value="monthly-account-fee">Monthly Account Fee</option>
+                        <option value="gov-benefits">Gov Benefits</option>
+                        <option value="savings">Savings</option>
+                        <option value="remitance">Remitance</option>
+                        <option value="other">Other</option>
                     </select>
                 </div>
             </div>

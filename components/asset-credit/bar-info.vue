@@ -7,12 +7,12 @@
             <div class="fullwidth flex" >
                 <strong class="marginright025" >
                     Debit:
-                </strong>${{item.balance_amount}} 
+                </strong>{{item.statement_type == 'debit' ? moneyFormater(item.balance_amount) : 'N/A'}}
             </div>
             <div class="fullwidth flex" >
                 <strong class="marginright025" >
                     Credit:
-                </strong>${{item.balance_amount}}  
+                </strong>{{item.statement_type == 'credit' ? moneyFormater(item.balance_amount) : 'N/A'}}
             </div>
 
         </div>
@@ -21,6 +21,6 @@
 
 <script>
 export default {
-    props: ['item']
+    props: ['item', 'moneyFormater']
 }
 </script>

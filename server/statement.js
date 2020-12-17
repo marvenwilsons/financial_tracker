@@ -73,7 +73,7 @@ function convertToInsertToStatement (parsedStatement, statement_type) {
     let base =`INSERT INTO statement (date, description, withdrawn_amount, deposited_amount, statement_type, transaction_purpose, balance_amount) VALUES \n`
     parsedStatement.map((e,i) => {
         const d = `to_date('${e.date.replace("/","-").replace("/","-")}','MM-DD-YYYY')`
-        const st = `${statement_type == 'credit' ? 'credit' : 'deposit'}`
+        const st = `${statement_type == 'credit' ? 'credit' : 'debit'}`
         base = base.concat( `(${d}, '${e.description}', ${e.withdrawn_amount}, ${e.deposited_amount}, '${st}', '${e.transaction_purpose}', ${e.balance_amount})${i == parsedStatement.length - 1? ' returning *' : ','} \n` )
     })
     return base.trim()

@@ -10,9 +10,9 @@
                 class="bar pointer smthw" 
                 :style="{
                     height: `${height}%`, 
-                    width:`10px`,
+                    width:`5px`,
                     borderBottom:'1px solid #be5a4b',
-                    background: item.statement_type == 'credit' ? '#c81c01' : '#3fd140', 
+                    background: item.statement_type == 'credit' ? 'red' : '#3fd140', 
                     alignSelf: item.statement_type == 'debit' && 'flex-end'
                 }" 
             ></div>
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+// background: item.statement_type == 'credit' ? 'red' : '#3fd140'
+
 export default {
     props: ['item', 'index'],
     data: () => ({

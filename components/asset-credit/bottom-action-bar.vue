@@ -4,10 +4,10 @@
             <small>
                 <span style="color:#afafaf;" >Coverage:</span> 
                 <span style="color:yellow" >({{StatementDataSet.length}} Days) <span style="color:#afafaf;" >
-                    From:</span> {{StatementDataSet[0].date}}
+                    From:</span> {{StatementDataSet[StatementDataSet.length - 1].date}} 
                 </span> 
                 <span style="color:yellow" >  <span style="color:#afafaf;" >
-                    To:</span> {{StatementDataSet[StatementDataSet.length - 1].date}}
+                    To:</span> {{StatementDataSet[0].date}}
                 </span>
             </small>
         </div>
