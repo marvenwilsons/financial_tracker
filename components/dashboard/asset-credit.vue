@@ -268,7 +268,8 @@ export default {
                 date: this.dateFormater(item.date,'YYYY/MM/DD'),
                 balance_amount: Math.round(item.balance_amount),
                 withdrawn_amount: item.withdrawn_amount,
-                deposited_amount: item.deposited_amount
+                deposited_amount: item.deposited_amount,
+                description: item.description
             })
         })
 
@@ -284,13 +285,17 @@ export default {
                     template[day] = {
                         statements: {
                             credit: {
-                                highestAmountOfTheDay:0,
-                                lowestAmountOfTheDay: 0,
+                                initialDeptBalanceOfTheDay: 0,
+                                finalDeptBalanceOfTheDay: 0,
+                                totalAmountPaidOfTheDay: 0,
                                 items: []
                             },
                             debit: {
                                 highestAmountOfTheDay:0,
                                 lowestAmountOfTheDay: 0,
+                                initialBalanceOfTheDay: 0,
+                                finalBalanceOfTheDay: 0,
+                                totalAmountSubtracted: 0,
                                 items: []
                             },
                         },
@@ -353,13 +358,24 @@ export default {
             // set initialAssetAmount, initialDeptAmount, totalWithdrawnAmount
             if(finalDataSet[i].statements.length != 0) {
                 if(finalDataSet[i].statements.debit.items.length != 0) {
-                    console.log(finalDataSet[i].statements.debit)
+                    const finalBalanceOfTheDay = finalDataSet[i].statements.debit.items[0].balance_amount
+                    finalDataSet[i].statements.debit.finalBalanceOfTheDay = finalBalanceOfTheDay
+
+                    const initialBalanceOfTheDay = finalDataSet[i].statements.debit.items[finalDataSet[i].statements.debit.items.length - 1].balance_amount
+                    finalDataSet[i].statements.debit.initialBalanceOfTheDay = initialBalanceOfTheDay
+
+                    const withdrawnAmountOftheDay = finalDataSet[i].statements.debit.items.map(e => e.withdrawn_amount).reduce((total,num) => total + num)
+                    finalDataSet[i].statements.debit.totalAmountSubtracted = withdrawnAmountOftheDay
+
+                    const highesLowestAmountOfTheDay = finalDataSet[i].statements.debit.items.map(e => e.balance_amount).sort((a,b) => b - a)
+                    finalDataSet[i].statements.debit.highestAmountOfTheDay = highesLowestAmountOfTheDay[0]
+                    finalDataSet[i].statements.debit.lowestAmountOfTheDay = highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1]
                 }
             }
         }
 
         
-        // console.log(finalDataSet)
+        console.log(finalDataSet)
 
 
     }

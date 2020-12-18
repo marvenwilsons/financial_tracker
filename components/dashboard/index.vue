@@ -6,8 +6,9 @@
             <AssetCreditComponent :StatementDataSet="rawData" />
         </section>
         <!-- sec: dept vs asset chart -->
-        <!-- sec: total spending of all transaction for this month -->
-        <!-- sec: get pre authorized transaction days  -->
+        <!-- sec: total spending list of all transaction for this month, ei: PRESTO: $900 -->
+        <!-- sec: get pre authorized transaction days, ei: LIFEINS: Every 30th of the month  -->
+        <!-- sec: Consultant, input the desired withdraw to credit or debit, then it will give you the result of the effect into your accounts  -->
     </div>
 </template>
 
