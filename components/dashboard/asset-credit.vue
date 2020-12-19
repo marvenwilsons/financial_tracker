@@ -100,7 +100,11 @@ export default {
         creditMaximumPeak: 0,
         assetMaximumPeak: 0,
         openSetting: false,
-        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        highestAssetValue: 0,
+        highestCreditValue:0,
+        highestAssetAmount: 0,
+        highestCreditAmount: 0
     }),
     methods: {
         scroll(mode) {
@@ -402,10 +406,24 @@ export default {
                     const highesLowestAmountOfTheDay = finalDataSet[i].statements.debit.items.map(e => e.balance_amount).sort((a,b) => b - a)
                     finalDataSet[i].statements.debit.highestAmountOfTheDay = highesLowestAmountOfTheDay[0]
                     finalDataSet[i].statements.debit.lowestAmountOfTheDay = highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1]
+
+                    if(highesLowestAmountOfTheDay[0] > this.highestAssetAmount) {
+                        this.highestAssetAmount = highesLowestAmountOfTheDay[0]
+                    }
+
+                    if(highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1] > this.highestCreditAmount) {
+                        this.highestCreditAmount = highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1]
+                    }
+
+                    finalDataSet[i].bar.debitAmountHeight = Math.round(findPercenOfTotal(this.highestAssetAmount,highesLowestAmountOfTheDay[0])) < 0 ? 0 :
+                    Math.round(findPercenOfTotal(this.highestAssetAmount,highesLowestAmountOfTheDay[0]))
+
+                    finalDataSet[i].bar.creditAmountHeight = Math.round(findPercenOfTotal( this.highestCreditAmount, highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1] )) < 0 ? 0 :
+                    Math.round(findPercenOfTotal( this.highestCreditAmount, highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1] ))
                 } else {
                     // debit without activity should inherit the day before prop
                     // a debit without items is invalid
-                    console.log('DEBIT:: \t cant find reference ==> ', finalDataSet[i].report.date)
+                    // console.log('DEBIT:: \t cant find reference ==> ', finalDataSet[i].report.date)
                 }
 
                 if(finalDataSet[i].statements.credit.items.length != 0) {
@@ -423,7 +441,7 @@ export default {
                 } else {
                     // credit without activity should inherit the day before prop
                     // a credit without items is invalid
-                    console.log('CREDIT:: \t cant find reference ==> ', finalDataSet[i].report.date)
+                    // console.log('CREDIT:: \t cant find reference ==> ', finalDataSet[i].report.date)
                 }
 
                 const { credit, debit } = finalDataSet[i].statements
@@ -448,13 +466,37 @@ export default {
                     finalDataSet[i].report.progress_type = 'positive'
                 }
 
+                // set asset highest value
+                if(finalAssetValue > this.highestAssetValue) {
+                    this.highestAssetValue = finalAssetValue
+                }
+
+                if(finalDeptValue > this.highestCreditValue) {
+                    this.highestCreditValue = finalDeptValue
+                }
+
+                finalDataSet[i].bar.debitValueHeight = 
+                Math.round(findPercenOfTotal(this.highestAssetValue,finalAssetValue)) < 0 ? 0 :
+                Math.round(findPercenOfTotal(this.highestAssetValue,finalAssetValue))
+
+                finalDataSet[i].bar.creditValueHeight = 
+                Math.round(findPercenOfTotal(this.highestCreditValue,finalDeptValue)) < 0 ? 0 :
+                Math.round(findPercenOfTotal(this.highestCreditValue,finalDeptValue))
+
+                if(isNaN(finalDataSet[i].bar.creditValueHeight)) {
+                    finalDataSet[i].bar.creditValueHeight = 0
+                    finalDataSet[i].report.msg = 'No Available Data Reference To Inherit From'
+                }
+
+                
+                if(isNaN(finalDataSet[i].bar.debitValueHeight)) {
+                    finalDataSet[i].bar.debitValueHeight = 0
+                    finalDataSet[i].report.msg = 'No Available Data Reference To Inherit From'
+                }
 
             }
 
         }
-
-        
-        console.log(finalDataSet)
 
 
     }

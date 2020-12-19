@@ -1,7 +1,7 @@
 <template>
   <v-app style="background:#515d6e;" >
     <v-main  >
-      <v-container class="bg relative margintop125" style="width:1080px;" >
+      <v-container class="bg relative margintop125" style="min-width:1080px;max-width:1080px;" >
         <section class="pad125 widgetsection absolute fullwidth relative" style="z-index:1; top:25px; left:-0px;" >
           <div style="left:0px; top:-40px;" class="absolute fullwidth flex flexend pad050 nav" >
             Logout
