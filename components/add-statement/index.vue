@@ -1,11 +1,9 @@
 <template>
-    <div style="min-height:300px;" class="relative" >
+    <div style="min-height:300px;" class="relative widgetsection" >
         <div v-if="isProcessDone.length == 2" style="z-index:200;" class="widgetsection flex flexcenter flexcol absolute fullwidth fullheight-percent">
             <h5 style="color:white" >REPORT</h5>
             <div class="pad125 marginbottom125 flex flexwrap flexcenter" style="border:1px solid white; width:400px;" >
-                <small>
-                    {{report}}
-                </small>
+                {{report}}
             </div>
             <div class="flex flexcol" v-if="nonRepeatedData" >
                 Below are non repeated data, please copy and try again
@@ -15,9 +13,9 @@
                 DONE
             </v-btn>
         </div>
-        <div class="flex spacebetween" >
+        <div class="flex spacebetween marginbottom050 pad125" >
             <div class="flex2" >
-                <h5 style="color:white; margin:0;" class="flex1" > Add Statement </h5>
+                <!-- <h5 style="color:white; margin:0;" class="flex1" > Add Statement </h5> -->
                 <div v-if="dataSet.length == 0" >
                     Paste a CSV bank statement below, 
                     <a v-if="!addOneEntryMode" @click="addOneEntryMode = true" style="color:yellow;">Insert one entry</a>

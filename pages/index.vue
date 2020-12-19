@@ -5,7 +5,6 @@
     <!--  -->
     <section class="margintop050 pad125 borderRad4 relative">
       <div class="" >
-        <addStatement v-if="view === 'add-statement'" />
         <dashboard v-if="view === 'dashboard'" />
       </div>
     </section>
