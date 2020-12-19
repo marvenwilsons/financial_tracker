@@ -1,24 +1,13 @@
 <template>
   <div class="" >
     <!--  -->
-    <section class="borderRad4 pad125 flex flexcenter spacebetween s" >
-      <img style="height:40px; width:40px;" src="/favicon.ico" alt="">
-      <div>
-        <v-btn outlined @click="view = 'dashboard'" :class="[view == 'dashboard' ? 'active' : 'non_active' ,'marginright025']" >
-          Dashboard
-        </v-btn>
-        <v-btn outlined color="white" @click="view = 'add-statement'" :class="[view == 'add-statement' ? 'active' : 'non_active']" >
-          Add Statement
-        </v-btn>
-        <v-btn outlined color="white" @click="view = 'statement-manager'" :class="[view == 'statement-manager' ? 'active' : 'non_active']" >
-          Statement Manager
-        </v-btn>
-      </div>
-    </section>
+
     <!--  -->
-    <section class="s margintop050 pad125 borderRad4">
-      <addStatement v-if="view === 'add-statement'" />
-      <dashboard v-if="view === 'dashboard'" />
+    <section class="margintop050 pad125 borderRad4 relative">
+      <div class="" >
+        <addStatement v-if="view === 'add-statement'" />
+        <dashboard v-if="view === 'dashboard'" />
+      </div>
     </section>
   </div>
 </template>
@@ -43,7 +32,7 @@ export default {
 
 <style>
 .s {
-  background: #567a91;
+  background: #3b495c;
   color: white;
 }
 .colorwhite{
@@ -60,5 +49,9 @@ export default {
 }
 .widgetsection {
   background: #26344a;
+    -webkit-box-shadow: 0px 0px 22px -6px rgba(0,0,0,0.71);
+  -moz-box-shadow: 0px 0px 22px -6px rgba(0,0,0,0.71);
+  box-shadow: 0px 0px 22px -6px rgba(0,0,0,0.71);
+  border-radius: 4px !important;
 }
 </style>

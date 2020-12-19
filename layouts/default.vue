@@ -1,8 +1,35 @@
 <template>
-  <v-app style="background:#26344a;" >
+  <v-app style="background:#515d6e;" >
     <v-main  >
-      <v-container class="bg" style="width:1000px;" >
-        <nuxt />
+      <v-container class="bg relative margintop125" style="width:1080px;" >
+        <section class="pad125 widgetsection absolute fullwidth relative" style="z-index:1; top:25px; left:-0px;" >
+          <div style="left:0px; top:-40px;" class="absolute fullwidth flex flexend pad050 nav" >
+            Logout
+          </div>
+          <section class="borderRad4 flex flexcenter spacebetween" >
+            <img style="height:40px; width:40px;" src="/favicon.ico" alt="">
+          </section>
+        </section>
+        <div class="margintop125" style="height:30px;" ></div>
+        <section style="border-radius:4px;" class="flex relative s margintop125 padbottom125" >
+          <div style="min-width:200px; left:-42px; z-index:1; top:70px;" class="pad125 absolute widgetsection borderRad4"  >
+            <div  class="pad025 padbottom050 padtop050 nav" >
+              Dashboard
+            </div>
+            <div class="pad025 padbottom050 padtop050 nav" >
+              Add Statements
+            </div>
+            <div  class="pad025 padbottom050 padtop050 nav" >
+              Manage Statements
+            </div>
+            <div  class="pad025 padbottom050 padtop050 nav" >
+              Consult & Spend
+            </div>
+          </div>
+          <div class="fullwidth flex flexend borderRad4" >
+            <nuxt style="width:900px;" />
+          </div>
+        </section>
       </v-container>
     </v-main>
   </v-app>
@@ -23,8 +50,13 @@ export default {
 </script>
 
 <style>
-.bg{
-  /* background-color: #1e1e1e; */
-background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='%239C92AC' fill-opacity='0.52'%3E%3Cpolygon fill-rule='evenodd' points='8 4 12 6 8 8 6 12 4 8 0 6 4 4 6 0 8 4'/%3E%3C/g%3E%3C/svg%3E");
+.nav {
+  color:#ebe8e8;
+  border-bottom:1px solid #677180;
+  cursor: pointer;
+}
+.nav:hover {
+  color: white;
+  transition: 500ms;
 }
 </style>

@@ -20,7 +20,7 @@ export default {
                 }
 
             },0.1)
-        }, this.index * 300);
+        }, this.index);
 
         
     }

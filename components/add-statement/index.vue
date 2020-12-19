@@ -140,6 +140,7 @@
                         <option value="savings">Savings</option>
                         <option value="remitance">Remitance</option>
                         <option value="other">Other</option>
+                        <option value="income / deposit / workpay" >Income / deposit / workpay</option>
                     </select>
                 </div>
             </div>

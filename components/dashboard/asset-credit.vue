@@ -8,7 +8,6 @@
                 <AssetCreditDataDisplay      v-if="selected == 'Data Display'"/>
             </template>
         </DonqueSettingComponent>
-
         <div style="color: #afafaf" class="flex flexcenter marginbottom125" >
             Asset VS Credit
         </div>
@@ -369,7 +368,7 @@ export default {
                 // console.log(`Credit: Found non empty data assigning now ${finalDataSet[i].report.date}`)
             }
             if(finalDataSet[i].statements.debit.items.length != 0) {
-                lastCreditDayStatement = finalDataSet[i].statements.debit
+                lastDebitDayStatement = finalDataSet[i].statements.debit
                 // console.log(`Debit: Found non empty data assigning now ${finalDataSet[i].report.date}`)
 
             }
@@ -406,7 +405,7 @@ export default {
                 } else {
                     // debit without activity should inherit the day before prop
                     // a debit without items is invalid
-                    console.log('DEBIT:: \t without activity ==> ', finalDataSet[i].report.date)
+                    console.log('DEBIT:: \t cant find reference ==> ', finalDataSet[i].report.date)
                 }
 
                 if(finalDataSet[i].statements.credit.items.length != 0) {
@@ -424,7 +423,7 @@ export default {
                 } else {
                     // credit without activity should inherit the day before prop
                     // a credit without items is invalid
-                    console.log('CREDIT:: \t without activity ==> ', finalDataSet[i].report.date)
+                    console.log('CREDIT:: \t cant find reference ==> ', finalDataSet[i].report.date)
                 }
 
                 const { credit, debit } = finalDataSet[i].statements

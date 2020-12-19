@@ -1,9 +1,12 @@
 <template>
     <div>
-        <h5 class="colorwhite" >Dashboard</h5>
-        <hr>
-        <section v-if="rawData.length" class="s" >
+        <h4 class="colorwhite" >Dashboard</h4>
+        <v-divider color="#677180" ></v-divider>
+        <section v-if="rawData.length" class="s flex" >
             <AssetCreditComponent :StatementDataSet="rawData" />
+            <div class="marginleft125 borderRad4 s widgetsection" style="width:350px;" >
+
+            </div>
         </section>
         <!-- sec: dept vs asset chart -->
         <!-- sec: total spending list of all transaction for this month, ei: PRESTO: $900 -->
