@@ -288,6 +288,7 @@ export default {
                                 initialDeptBalanceOfTheDay: 0,
                                 finalDeptBalanceOfTheDay: 0,
                                 totalAmountPaidOfTheDay: 0,
+                                totalBorrowedAmountOfTheDay: 0,
                                 items: []
                             },
                             debit: {
@@ -307,11 +308,19 @@ export default {
                             monthIndex: this.getMonthIndex(month),
                             finalAssetValue: 0,
                             finalDeptValue: 0,
-                            initialAssetAmount: 0,
-                            initialDeptAmount: 0,
+                            initialAssetValue: 0,
+                            initialDeptValue: 0,
                             hasActivity: false,
                             statementInheritDate: null,
-                            totalWithdrawnAmount: 0
+                            totalWithdrawnAmount: 0,
+                            msg: null,
+                            progress_type: null
+                        },
+                        bar: {
+                            creditAmountHeight: 0,
+                            creditValueHeight: 0,
+                            debitAmountHeight: 0,
+                            debitValueHeight: 0
                         }
                     }
                 })
@@ -333,6 +342,7 @@ export default {
                 template[item].report.hasActivity = true
             }
         }
+        
 
         const finalDataSet = []
 
@@ -348,6 +358,29 @@ export default {
                 }
             }
         })
+
+        // populate days without activity
+        let lastDebitDayStatement= undefined
+        let lastCreditDayStatement = undefined
+        
+        for(var i = 0; i < finalDataSet.length; i++) {
+            if(finalDataSet[i].statements.credit.items.length != 0) {
+                lastCreditDayStatement = finalDataSet[i].statements.credit
+                // console.log(`Credit: Found non empty data assigning now ${finalDataSet[i].report.date}`)
+            }
+            if(finalDataSet[i].statements.debit.items.length != 0) {
+                lastCreditDayStatement = finalDataSet[i].statements.debit
+                // console.log(`Debit: Found non empty data assigning now ${finalDataSet[i].report.date}`)
+
+            }
+
+            if(finalDataSet[i].statements.credit.items.length == 0 && lastCreditDayStatement != undefined) {
+                finalDataSet[i].statements.credit = lastCreditDayStatement
+            }
+            if(finalDataSet[i].statements.debit.items.length == 0 && lastDebitDayStatement != undefined) {
+                finalDataSet[i].statements.debit = lastDebitDayStatement
+            }
+        }
 
         // set statementInheritDate property
         for(var i = 0; i < finalDataSet.length; i ++) {
@@ -370,8 +403,55 @@ export default {
                     const highesLowestAmountOfTheDay = finalDataSet[i].statements.debit.items.map(e => e.balance_amount).sort((a,b) => b - a)
                     finalDataSet[i].statements.debit.highestAmountOfTheDay = highesLowestAmountOfTheDay[0]
                     finalDataSet[i].statements.debit.lowestAmountOfTheDay = highesLowestAmountOfTheDay[highesLowestAmountOfTheDay.length - 1]
+                } else {
+                    // debit without activity should inherit the day before prop
+                    // a debit without items is invalid
+                    console.log('DEBIT:: \t without activity ==> ', finalDataSet[i].report.date)
                 }
+
+                if(finalDataSet[i].statements.credit.items.length != 0) {
+                    const withdrawnsOfTheDay = Math.round(finalDataSet[i].statements.credit.items.map(e => e.withdrawn_amount).reduce((total,num) => total + num))
+                    finalDataSet[i].statements.credit.totalBorrowedAmountOfTheDay = withdrawnsOfTheDay
+
+                    const initialDeptBalanceOfTheDay = finalDataSet[i].statements.credit.items[finalDataSet[i].statements.credit.items.length - 1].balance_amount
+                    finalDataSet[i].statements.credit.initialDeptBalanceOfTheDay = initialDeptBalanceOfTheDay
+
+                    const totalAmountPaidOfTheDay = Math.round(finalDataSet[i].statements.credit.items.map(e => e.deposited_amount).reduce((total,num) => total + num))
+                    finalDataSet[i].statements.credit.totalAmountPaidOfTheDay = totalAmountPaidOfTheDay
+
+                    const finalDeptBalanceOfTheDay = finalDataSet[i].statements.credit.items[0].balance_amount
+                    finalDataSet[i].statements.credit.finalDeptBalanceOfTheDay = finalDeptBalanceOfTheDay
+                } else {
+                    // credit without activity should inherit the day before prop
+                    // a credit without items is invalid
+                    console.log('CREDIT:: \t without activity ==> ', finalDataSet[i].report.date)
+                }
+
+                const { credit, debit } = finalDataSet[i].statements
+
+                const finalAssetValue = (debit.finalBalanceOfTheDay - credit.finalDeptBalanceOfTheDay) < 0 ? 0 :  debit.finalBalanceOfTheDay - credit.finalDeptBalanceOfTheDay
+                finalDataSet[i].report.finalAssetValue = finalAssetValue
+
+                const finalDeptValue = (credit.finalDeptBalanceOfTheDay - debit.finalBalanceOfTheDay) < 0 ? 0 :  credit.finalDeptBalanceOfTheDay - debit.finalBalanceOfTheDay
+                finalDataSet[i].report.finalDeptValue = finalDeptValue
+
+                const initialAssetValue = finalDataSet[i].statements.debit.initialBalanceOfTheDay - finalDataSet[i].statements.credit.initialDeptBalanceOfTheDay
+                finalDataSet[i].report.initialAssetValue =  initialAssetValue
+
+                const initialDeptValue = finalDataSet[i].statements.credit.initialDeptBalanceOfTheDay - finalDataSet[i].statements.debit.initialBalanceOfTheDay
+                finalDataSet[i].report.initialDeptValue = initialDeptValue
+
+                if(finalAssetValue == 0 || finalAssetValue < 0) {
+                    finalDataSet[i].report.msg = `Asset value went down to zero, and liablilty value went up to ${finalDeptValue}`
+                    finalDataSet[i].report.progress_type = 'negative'
+                } else if(finalAssetValue > 0 && finalDeptValue <= 0 ) {
+                    finalDataSet[i].report.msg = `Asset value went up to ${finalAssetValue}`
+                    finalDataSet[i].report.progress_type = 'positive'
+                }
+
+
             }
+
         }
 
         
@@ -390,7 +470,7 @@ export default {
     display: none;
     background: yellow;
     left: 10px;
-    top: -1px;
+    top: 20px;
     color: black;
     font-size: 11px;
     z-index: 100;

@@ -1,5 +1,5 @@
 <template>
-    <div class="absolute bar-info pad025" >
+    <div style="width: 200px; min-height:170px;" class="absolute bar-info pad025" >
         <div class="flex flexcol" >
             <div class="fullwidth flex" >
                 {{item.date}}  
