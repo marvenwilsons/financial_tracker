@@ -1,5 +1,5 @@
 <template>
-    <div class="fullwidth widgetsection pad125 borderRad4 relative" >
+    <div class="fullwidth widgetsection borderRad4 relative" >
         <!-- settings -->
         <DonqueSettingComponent ref="setting" >
             <template v-slot:selected="{ selected }">
@@ -8,67 +8,81 @@
                 <AssetCreditDataDisplay      v-if="selected == 'Data Display'"/>
             </template>
         </DonqueSettingComponent>
-        <div style="color: #afafaf" class="flex flexcenter marginbottom125" >
-            Asset VS Credit
+        <div v-if="dataLoadingDone == false" class="loadingPane absolute fullwidth flex pad125 fullheight-percent flexcenter" >
+            <div class="widgetsection" >
+                <div class="pad125" >
+                    Loading chunk: {{loadingChunk}}
+                </div>
+                <div :style="{background:'yellow', 'height':'2px', width:`${loading}%`}" >
+                    
+                </div> 
+            </div>
         </div>
-        <div class="flex spacebetween">
-            <div>
+        <section class="pad125" >
+            <!--  -->
+            <div style="color: #afafaf" class="flex flexcenter marginbottom125" >
+                Asset Value VS Liablilty
+            </div>
+            <!--  -->
+            <div class="flex spacebetween">
+                <div>
+                    <small style="color:#afafaf" >
+                        MUP: <span style="color:yellow;" >{{assetMaximumPeak ? moneyFormater(assetMaximumPeak.balance_amount) : 'N/A'}}</span> on 
+                        <span style="color:yellow;" > {{assetMaximumPeak ? dateFormater(assetMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}} </span> - asset
+                    </small>
+                </div>
+                <div 
+                    @click="() =>  $refs.setting.toggle(['Coverage', 'Data Display', 'Bar'])" 
+                    class="pointer" >
+                    ⚙️ 
+                </div>
+            </div>
+            <!--  -->
+            <div style="height:250px; align-items:center; overflow:hidden;" class="relative flex" >
+                <div style="height:95%; z-index:1" class="absolute flex flexcenter" >
                 <small style="color:#afafaf" >
-                    MUP: <span style="color:yellow;" >{{assetMaximumPeak ? moneyFormater(assetMaximumPeak.balance_amount) : 'N/A'}}</span> on 
-                    <span style="color:yellow;" > {{assetMaximumPeak ? dateFormater(assetMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}} </span> - asset
+                        0
                 </small>
-            </div>
-            <div 
-                @click="() =>  $refs.setting.toggle(['Coverage', 'Data Display', 'Bar'])" 
-                class="pointer" >
-                ⚙️ 
-            </div>
-        </div>
-
-        <!--  -->
-        <div style="height:250px; align-items:center; overflow:hidden;" class="relative flex" >
-            <div style="height:95%; z-index:1" class="absolute flex flexcenter" >
-               <small style="color:#afafaf" >
-                    0
-               </small>
-            </div>
-            <div style="border-top:1px solid gray;" class="absolute fullwidth marginleft050" >
-            </div>
-            <!-- charts bar here -->
-            <div style="width:1900px; overflow-x:hidden; border-top:1px solid gray; border-bottom:1px solid gray;" 
-            class="fullheight-percent fullwidth flex relative pad050 marginleft025" >
-                <div  class="fullheight-percent" >
-                    <div id="barParent" :style="{alignItems:'center', transform: `translateX(${barMove}px)`}" 
-                    class="flex fullheight-percent flexcenter p"  >
-                        <!-- bar item -->
-                        <div v-for="(item,index) in statements" :key="index" class="relative bar-parent fullheight-percent flex" >
-                            <barInfo
-                             :item="item"
-                             :moneyFormater="moneyFormater" />
-                            <bar :index="index" :item="item" />
+                </div>
+                <div style="border-top:1px solid gray;" class="absolute fullwidth marginleft050" >
+                </div>
+                <!-- charts bar here -->
+                <div style="width:1900px; overflow-x:hidden; border-top:1px solid gray; border-bottom:1px solid gray;" 
+                class="fullheight-percent fullwidth flex relative pad050 marginleft025" >
+                    <div  class="fullheight-percent" >
+                        <div id="barParent" :style="{alignItems:'center', transform: `translateX(${barMove}px)`}" 
+                        class="flex fullheight-percent flexcenter p"  >
+                            <!-- bar item -->
+                            <div v-for="(item,index) in statements" :key="index"  style="margin-left:1px;" class="relative bar-parent fullheight-percent flex" >
+                                <barInfo
+                                :item="item"
+                                :moneyFormater="moneyFormater" />
+                                <bar @chunkAdded="chunkAdded" :index="index" :item="item" />
+                            </div>
+                            <!-- end -->
                         </div>
-                        <!-- end -->
                     </div>
                 </div>
             </div>
-        </div>
-        <!--  -->
-        <div class="flex spacebetween">
-            <div class="flex2" >
-                <small style="color:#afafaf" >
-                    MDP: 
-                    <span style="color:yellow;" > {{creditMaximumPeak ? moneyFormater(creditMaximumPeak.balance_amount) : 'N/A'}}</span> on
-                    <span style="color:yellow;" >{{creditMaximumPeak ? dateFormater(creditMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}}</span>
-                     - credit
-                </small>
+            <!--  -->
+            <div class="flex spacebetween">
+                <div class="flex2" >
+                    <small style="color:#afafaf" >
+                        MDP: 
+                        <span style="color:yellow;" > {{creditMaximumPeak ? moneyFormater(creditMaximumPeak.balance_amount) : 'N/A'}}</span> on
+                        <span style="color:yellow;" >{{creditMaximumPeak ? dateFormater(creditMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}}</span>
+                        - credit
+                    </small>
+                </div>
+                <!-- bottom-option-bar -->
+                <bottomOptionBar
+                    @scrollToLeft="scroll('left')"
+                    @scrollToRight="scroll('right')"
+                    :StatementDataSet="statements"
+                />
             </div>
-            <!-- bottom-option-bar -->
-            <bottomOptionBar
-                @scrollToLeft="scroll('left')"
-                @scrollToRight="scroll('right')"
-                :StatementDataSet="statements"
-             />
-        </div>
+        </section>
+
 
     </div>
 </template>
@@ -104,22 +118,52 @@ export default {
         highestAssetValue: 0,
         highestCreditValue:0,
         highestAssetAmount: 0,
-        highestCreditAmount: 0
+        highestCreditAmount: 0,
+        dataLoadingDone: false,
+        loading: 0,
+        loadingChunk: undefined,
+        rightScrollFull: false
     }),
     methods: {
+        chunkAdded(chunk) {
+            const findPercenOfTotal = (totalValue, numberVsTotal) => {
+                const a = numberVsTotal / totalValue
+                const b = a * 100
+                return b
+            }
+
+            if(chunk == this.statements.length) {
+                const m = setInterval(() => {
+                    this.scroll('right')
+                    if(this.rightScrollFull) {
+                        clearInterval(m)
+                        console.log('done')
+                        this.dataLoadingDone = true
+
+                    }
+                }, 10)
+            } else {
+                this.loadingChunk = this.statements[chunk].date
+                this.loading = 
+                    Math.round(findPercenOfTotal(this.statements.length,chunk)) < 0 ? 0 : 
+                    Math.round(findPercenOfTotal(this.statements.length,chunk))
+            }
+        },
         scroll(mode) {
             // console.log('test', mode)
             const barParent = document.getElementById('barParent')
 
             if(barParent.offsetWidth > 882) {
                 if(mode == 'right') {
-                    const stopCondition = (Math.abs(this.barMove) + 550) > barParent.offsetWidth
+                    const stopCondition = (Math.abs(this.barMove) + 200) > barParent.offsetWidth
                     if(stopCondition == false) {
-                        this.barMove = this.barMove - 40
+                        this.barMove = this.barMove - 60
+                    } else {
+                        this.rightScrollFull = true
                     }
                 } else if( mode == 'left') {
                     if(this.barMove != 0) {
-                        this.barMove = this.barMove + 40
+                        this.barMove = this.barMove + 60
                     }
                 }
             }
@@ -266,7 +310,7 @@ export default {
             }
 
             parsedDataSet.push({
-                // height: Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)),
+                height: Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)) < 0 ? 0 : Math.round(findPercenOfTotal(assetMaximumPeak,item.balance_amount)),
                 statement_type: item.statement_type,
                 date: this.dateFormater(item.date,'YYYY/MM/DD'),
                 balance_amount: Math.round(item.balance_amount),
@@ -505,7 +549,9 @@ export default {
 
 <style >
 .bar-parent:hover{
-    border:1px solid yellow;
+    /* border:1px solid yellow; */
+    background: rgba(255, 255, 0, 0.288);
+    cursor: pointer;
 }
 .bar-info {
     display: none;
@@ -521,5 +567,9 @@ export default {
 }
 .p {
     transition: 500ms;
+}
+.loadingPane {
+    background: #afafaf5d;
+    z-index: 100;
 }
 </style>

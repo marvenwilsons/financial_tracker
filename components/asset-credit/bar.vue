@@ -10,7 +10,7 @@
                 class="bar pointer smthw" 
                 :style="{
                     height: `${height}%`, 
-                    width:`5px`,
+                    width:`10px`,
                     borderBottom:'1px solid #be5a4b',
                     background: item.statement_type == 'credit' ? 'red' : '#3fd140', 
                     alignSelf: item.statement_type == 'debit' && 'flex-end'
@@ -32,9 +32,9 @@ export default {
         const incrementHeight = setInterval(() => {
             if(this.height != this.item.height) {
                 const addAmount = this.item.height / 8
-                this.height = this.height + addAmount
-                // this.height = this.item.height
-
+                // this.height = this.height + addAmount
+                this.height = this.item.height
+                this.$emit('chunkAdded', this.index + 1)
             } else {
                 clearInterval(incrementHeight)
             }
