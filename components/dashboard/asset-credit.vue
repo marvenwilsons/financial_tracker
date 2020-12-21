@@ -53,7 +53,9 @@
                         <div id="barParent" :style="{alignItems:'center', transform: `translateX(${barMove}px)`}" 
                         class="flex fullheight-percent flexcenter p"  >
                             <!-- bar item -->
-                            <div v-for="(item,index) in statements" :key="index"  style="margin-left:1px;" class="relative bar-parent fullheight-percent flex" >
+                            <div @click="$emit('barClick', item)" v-for="(item,index) in statements" :key="index"  
+                            style="margin-left:1px;" 
+                            class="relative bar-parent fullheight-percent flex" >
                                 <barInfo
                                 :item="item"
                                 :moneyFormater="moneyFormater" />
@@ -137,13 +139,16 @@ export default {
                     this.scroll('right')
                     if(this.rightScrollFull) {
                         clearInterval(m)
-                        console.log('done')
                         this.dataLoadingDone = true
 
                     }
                 }, 10)
             } else {
-                this.loadingChunk = this.statements[chunk].date
+                if(chunk > this.statements.length / 2) {
+                    this.scroll('right')
+                }
+
+                this.loadingChunk = this.statements[chunk].report.date
                 this.loading = 
                     Math.round(findPercenOfTotal(this.statements.length,chunk)) < 0 ? 0 : 
                     Math.round(findPercenOfTotal(this.statements.length,chunk))
@@ -153,9 +158,10 @@ export default {
             // console.log('test', mode)
             const barParent = document.getElementById('barParent')
 
+
             if(barParent.offsetWidth > 882) {
                 if(mode == 'right') {
-                    const stopCondition = (Math.abs(this.barMove) + 200) > barParent.offsetWidth
+                    const stopCondition = (Math.abs(this.barMove) + 400) > barParent.offsetWidth
                     if(stopCondition == false) {
                         this.barMove = this.barMove - 60
                     } else {
@@ -320,7 +326,7 @@ export default {
             })
         })
 
-        this.statements = parsedDataSet
+        // this.statements = parsedDataSet
 
         const template = {}
         
@@ -434,7 +440,6 @@ export default {
             if(i != 0) {
                 finalDataSet[i].report.statementInheritDate = finalDataSet[i - 1].report.date
             }
-
             // set initialAssetAmount, initialDeptAmount, totalWithdrawnAmount
             if(finalDataSet[i].statements.length != 0) {
                 if(finalDataSet[i].statements.debit.items.length != 0) {
@@ -539,9 +544,9 @@ export default {
                 }
 
             }
-
         }
 
+        this.statements = finalDataSet
 
     }
 }
@@ -566,7 +571,7 @@ export default {
     display: block;
 }
 .p {
-    transition: 500ms;
+    transition: 100ms;
 }
 .loadingPane {
     background: #afafaf5d;

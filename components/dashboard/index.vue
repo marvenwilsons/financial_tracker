@@ -3,10 +3,8 @@
         <h4 class="colorwhite" >Dashboard</h4>
         <v-divider color="#677180" ></v-divider>
         <section v-if="rawData.length" class="s flex" >
-            <AssetCreditComponent :StatementDataSet="rawData" />
-            <div class="marginleft125 borderRad4 s widgetsection" style="width:350px;" >
-
-            </div>
+            <AssetCreditComponent @barClick="barClick" :StatementDataSet="rawData" />
+            <BarDetails :barDetails="barDetails" />
         </section>
         <!-- sec: dept vs asset chart -->
         <!-- sec: total spending list of all transaction for this month, ei: PRESTO: $900 -->
@@ -17,12 +15,15 @@
 
 <script>
 import AssetCreditComponent from './asset-credit'
+import BarDetails from '@/components/asset-credit/bar-details'
 export default {
     components: {
-        AssetCreditComponent
+        AssetCreditComponent,
+        BarDetails
     },
     data: () => ({
-        rawData: []
+        rawData: [],
+        barDetails: undefined
     }),
     async fetch() {
         const d = await this.$axios.get('/money/statement')
@@ -37,6 +38,11 @@ export default {
         })
         this.rawData = x
         // console.log(x[0])
+    },
+    methods: {
+        barClick(bar) {
+            this.barDetails = bar
+        }
     },
     created() {
         // for(var i = 0; i < 230; i++) {
