@@ -1,8 +1,8 @@
 <template>
-    <div style="width: 100px;" class="absolute bar-info pad025" >
-        <div class="flex flexcol" >
+    <div class="absolute bar-info" >
+        <!-- <div class="flex flexcol" >
             <div class="fullwidth flex" >
-                {{item.date}}  
+                {{item}}  
             </div>
             <div class="fullwidth flex" >
                 <strong class="marginright025" >
@@ -14,8 +14,7 @@
                     Credit:
                 </strong>{{item.statement_type == 'credit' ? moneyFormater(item.balance_amount) : 'N/A'}}
             </div>
-
-        </div>
+        </div> -->
     </div>
 </template>
 

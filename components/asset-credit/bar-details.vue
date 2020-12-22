@@ -7,7 +7,10 @@
                     <strong style="color: yellow" >{{barDetails.report.date}}</strong>
                 </div>
                 <div class="pad050" >
-                    {{barDetails.report.msg}}
+                    {{msg}} 
+                    <span style="color:yellow;" >
+                        {{moneyFormater(msgValue)}}
+                    </span>
                 </div>
             </section>
             <!--  -->
@@ -67,20 +70,26 @@
 export default {
     props: ['barDetails'],
     data: () => ({
+        msg: undefined,
+        msgValue: undefined
     }),
     methods: {
         moneyFormater(value) {
             var formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-
-            // These options are needed to round to whole numbers if that's what you want.
-            //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-            //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+                style: 'currency',
+                currency: 'USD',
             });
-
             return formatter.format(value)
         },
+    },
+    watch: {
+        barDetails() {
+            if(this.barDetails) {
+                const msg = this.barDetails.report.msg
+                this.msg = msg.split('up to')[0]
+                this.msgValue = msg.split('up to')[1]
+            }
+        }
     }
 }
 </script>

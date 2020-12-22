@@ -1,11 +1,16 @@
 <template>
     <div 
-        class="flex  flexcol" 
+        class="flex flexcol relative" 
         :style="{
             height:'100%',
             width:'10px',
-            alignSelf: item.statement_type == 'credit' ? 'flex-end' : 'flex-start'}" 
+            alignSelf: item.statement_type == 'credit' ? 'flex-end' : 'flex-start',
+            borderLeft: item.report.dayOf == '01' && `1px solid white`
+            }" 
     >
+        <div class="absolute padleft050"  style="z-index:100;" v-if="item.report.dayOf == '01'">
+            <small>{{item.report.monthOf}} {{item.report.yearOf}}</small>
+        </div>
         <div style="align-self:flex-end" class="fullwidth flex1 relative">
             <!-- asset amount -->
             <div :style="{bottom:0, background: '#7c8592', height: `${item.bar.debitAmountHeight}%`}" class="smth absolute fullwidth" ></div>
@@ -30,17 +35,6 @@ export default {
         height: 0
     }),
     mounted() {
-        // const incrementHeight = setInterval(() => {
-        //     if(this.height != this.item.height) {
-        //         const addAmount = this.item.height / 8
-        //         // this.height = this.height + addAmount
-        //         // this.height = this.item.height
-        //         this.$emit('chunkAdded', this.index + 1)
-        //     } else {
-        //         clearInterval(incrementHeight)
-        //     }
-        // },this.index)
-
         setTimeout(() => {
             this.$emit('chunkAdded', this.index + 1)
         }, this.index)
