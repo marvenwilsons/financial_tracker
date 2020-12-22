@@ -16,9 +16,13 @@
             <!--  -->
             <section style="border:1px solid #3b495c;" >
                 <div class="pad050" style="border:1px solid #3b495c; background:  #3b495c;" >
-                    <span style="color:#afafaf"  >Debit activity</span>
+                    <span style="color:#afafaf"  >Debit total of the day</span>
                 </div>
-                <!-- highestAmountOfTheDay, lowestAmountOfTheDay, initialBalanceOfTheDay, finalBalanceOfTheDay -->
+                <div v-if="barDetails.statements.debit.inheritFrom && barDetails.report.date != barDetails.statements.debit.inheritFrom" class="flex flexcenter" >
+                    <small style="color:yellow;" >
+                        Data copied from: {{barDetails.statements.debit.inheritFrom}}
+                    </small>
+                </div>
                 <div class="pad050 flex flexcenter" >
                     <small class="flex1" >Initial Balance</small>
                     <span style="color:yellow ">
@@ -40,7 +44,12 @@
             </section>
             <section style="border:1px solid #3b495c;" >
                 <div class="pad050" style="border:1px solid #3b495c; background:  #3b495c; color: #afafaf" >
-                    Credit activity
+                    Credit total of the day
+                </div>
+                <div v-if="barDetails.statements.credit.inheritFrom && barDetails.report.date != barDetails.statements.credit.inheritFrom" class="flex flexcenter" >
+                    <small style="color:yellow;" >
+                        Data copied from: {{barDetails.statements.credit.inheritFrom}}
+                    </small>
                 </div>
                 <!-- highestAmountOfTheDay, lowestAmountOfTheDay, initialBalanceOfTheDay, finalBalanceOfTheDay -->
                 <div class="pad050 flex" >
@@ -75,11 +84,13 @@ export default {
     }),
     methods: {
         moneyFormater(value) {
-            var formatter = new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-            });
-            return formatter.format(value)
+            if(!isNaN(value)) {
+                var formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                });
+                return formatter.format(value)
+            }   
         },
     },
     watch: {

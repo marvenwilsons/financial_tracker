@@ -27,8 +27,8 @@
             <div class="flex spacebetween">
                 <div>
                     <small style="color:#afafaf" >
-                        MUP: <span style="color:yellow;" >{{assetMaximumPeak ? moneyFormater(assetMaximumPeak.balance_amount) : 'N/A'}}</span> on 
-                        <span style="color:yellow;" > {{assetMaximumPeak ? dateFormater(assetMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}} </span> - asset
+                        MUP: <span style="color:yellow;" >{{highestAssetValue ? moneyFormater(highestAssetValue) : 'N/A'}}</span> on 
+                        <span style="color:yellow;" > {{highestAssetValue ? dateFormater(assetMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}} </span> - asset
                     </small>
                 </div>
                 <div 
@@ -53,13 +53,13 @@
                         <div id="barParent" :style="{alignItems:'center', transform: `translateX(${barMove}px)`}" 
                         class="flex fullheight-percent flexcenter p"  >
                             <!-- bar item -->
-                            <div @click="$emit('barClick', item)" v-for="(item,index) in statements" :key="index"  
+                            <div @click="$emit('barClick', item), selectedBar = index" v-for="(item,index) in statements" :key="index"  
                             style="margin-left:1px;" 
                             class="relative bar-parent fullheight-percent flex" >
                                 <barInfo
                                 :item="item"
                                 :moneyFormater="moneyFormater" />
-                                <bar @chunkAdded="chunkAdded" :index="index" :item="item" />
+                                <bar @chunkAdded="chunkAdded" :selectedBar="selectedBar" :index="index" :item="item" />
                             </div>
                             <!-- end -->
                         </div>
@@ -111,6 +111,7 @@ export default {
         AssetCreditDataDisplay
     },
     data: () => ({
+        selectedBar: undefined,
         statements: [],
         barMove: 0,
         creditMaximumPeak: 0,
@@ -342,6 +343,7 @@ export default {
                                 finalDeptBalanceOfTheDay: 0,
                                 totalAmountPaidOfTheDay: 0,
                                 totalBorrowedAmountOfTheDay: 0,
+                                inheritFrom: null,  
                                 items: []
                             },
                             debit: {
@@ -350,6 +352,7 @@ export default {
                                 initialBalanceOfTheDay: 0,
                                 finalBalanceOfTheDay: 0,
                                 totalAmountSubtracted: 0,
+                                inheritFrom: null, 
                                 items: []
                             },
                         },
@@ -367,7 +370,7 @@ export default {
                             statementInheritDate: null,
                             totalWithdrawnAmount: 0,
                             msg: null,
-                            progress_type: null
+                            progress_type: null,
                         },
                         bar: {
                             creditAmountHeight: 0,
@@ -414,24 +417,30 @@ export default {
 
         // populate days without activity
         let lastDebitDayStatement= undefined
+        let debitDate = undefined
         let lastCreditDayStatement = undefined
+        let creditDate = undefined
         
         for(var i = 0; i < finalDataSet.length; i++) {
             if(finalDataSet[i].statements.credit.items.length != 0) {
                 lastCreditDayStatement = finalDataSet[i].statements.credit
+                creditDate = finalDataSet[i].report.date
                 // console.log(`Credit: Found non empty data assigning now ${finalDataSet[i].report.date}`)
             }
             if(finalDataSet[i].statements.debit.items.length != 0) {
                 lastDebitDayStatement = finalDataSet[i].statements.debit
+                debitDate = finalDataSet[i].report.date
                 // console.log(`Debit: Found non empty data assigning now ${finalDataSet[i].report.date}`)
 
             }
 
             if(finalDataSet[i].statements.credit.items.length == 0 && lastCreditDayStatement != undefined) {
                 finalDataSet[i].statements.credit = lastCreditDayStatement
+                finalDataSet[i].statements.credit.inheritFrom = creditDate
             }
             if(finalDataSet[i].statements.debit.items.length == 0 && lastDebitDayStatement != undefined) {
                 finalDataSet[i].statements.debit = lastDebitDayStatement
+                finalDataSet[i].statements.debit.inheritFrom = debitDate
             }
         }
 
@@ -534,13 +543,13 @@ export default {
 
                 if(isNaN(finalDataSet[i].bar.creditValueHeight)) {
                     finalDataSet[i].bar.creditValueHeight = 0
-                    finalDataSet[i].report.msg = 'No Available Data Reference To Inherit From'
+                    finalDataSet[i].report.msg = 'No Available Credit Data Reference To Inherit From'
                 }
 
                 
                 if(isNaN(finalDataSet[i].bar.debitValueHeight)) {
                     finalDataSet[i].bar.debitValueHeight = 0
-                    finalDataSet[i].report.msg = 'No Available Data Reference To Inherit From'
+                    finalDataSet[i].report.msg = 'No Available Asset Data Reference To Inherit From'
                 }
 
             }
