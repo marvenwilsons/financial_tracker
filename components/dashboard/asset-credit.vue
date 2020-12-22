@@ -450,7 +450,7 @@ export default {
                     finalDataSet[i].statements.debit.initialBalanceOfTheDay = initialBalanceOfTheDay
 
                     const withdrawnAmountOftheDay = finalDataSet[i].statements.debit.items.map(e => e.withdrawn_amount).reduce((total,num) => total + num)
-                    finalDataSet[i].statements.debit.totalAmountSubtracted = withdrawnAmountOftheDay
+                    finalDataSet[i].statements.debit.totalAmountSubtracted = Math.round(withdrawnAmountOftheDay)
 
                     const highesLowestAmountOfTheDay = finalDataSet[i].statements.debit.items.map(e => e.balance_amount).sort((a,b) => b - a)
                     finalDataSet[i].statements.debit.highestAmountOfTheDay = highesLowestAmountOfTheDay[0]
