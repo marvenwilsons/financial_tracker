@@ -1,3 +1,5 @@
 <template>
-    <div></div>
+    <section>
+        <slot></slot>
+    </section>
 </template>

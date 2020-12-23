@@ -1,10 +1,10 @@
 <template>
-    <Widget style="min-height:750px;" class="flex1 " >
-        <section role="title" class="flex flexcenter pad125 widgetTitle" >
+    <Widget style="min-height:744px;" class="flex1 " >
+        <WidgetTitle>
             Monthly Spending Tally
-        </section>
-        <section role="date" class="padleft125 padright125 flex" >
-            <div  class="widgetsection flex" >
+        </WidgetTitle>
+        <div class="padleft125 padright125 flex">
+            <div  class="flex widgetsection" >
                 <div 
                     v-for="item in cal" :key="item" @click="selectedMonth = item" 
                     :class="['borderRad4', 'pad025', 'padleft050', 'padright050', 'calItem', selectedMonth == item ? 'active' : '']" 
@@ -18,14 +18,14 @@
                     :class="['borderRad4', 'pad025', 'padleft050', 'padright050', 'calItem', selectedYear == year ? 'active' : '']" 
                     style="border: 1px solid #3b485c;" >{{year}}</div>
             </div>
-        </section>
-        <section style="min-height:400px;" class="relative pad125" >
+        </div>
+        <div style="min-height:400px;" class="relative pad125" >
             <div v-if="mbd_ready" style="min-height:400px; overflow: auto; border: 1px solid #3b485c" class="fullwidth pad050 padtop025 borderRad4 flex flexwrap" >
                 <!--  -->
                 <MBD_ITEM v-for="item in $store.state.categories" :key="item.value" :item="item" :tally="tally" ></MBD_ITEM>
                 <!--  -->
             </div>
-        </section>
+        </div>
     </Widget>
 </template>
 

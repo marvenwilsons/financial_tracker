@@ -7,7 +7,19 @@
             Logout
           </div>
           <section class="borderRad4 flex flexcenter spacebetween" >
-            <img style="height:40px; width:40px;" src="/favicon.ico" alt="">
+            <div>
+              <img style="height:40px; width:40px;" src="/favicon.ico" alt="">
+            </div>
+            <div>
+              <div class="flex" >
+                <div class="colorwhite pointer marginright125" >
+                  Account Details
+                </div>
+                <div class="colorwhite pointer " >
+                  Login & Security
+                </div>
+              </div>
+            </div>
           </section>
         </section>
         <div class="margintop125" style="height:30px;" ></div>

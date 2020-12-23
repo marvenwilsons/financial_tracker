@@ -1,5 +1,5 @@
 <template>
-    <div>
-        I am modal
-    </div>
+    <section class="absolute" >
+        <slot></slot>
+    </section>
 </template>
