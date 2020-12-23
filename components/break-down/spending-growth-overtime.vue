@@ -1,8 +1,8 @@
 <template>
-    <div class="widgetsection s flex1 " >
-        <section role="title" class="flex flexcenter pad050 widgetTitle" >
-            Spending Growth Over Time
-        </section>
+    <Widget class="widgetsection s flex1 " >
+        <WidgetTitle role="title" class="flex flexcenter pad050 widgetTitle" >
+            Spening Growth Over Time
+        </WidgetTitle>
         <section role="date" >
 
         </section>
@@ -11,5 +11,5 @@
                 body
             </div>
         </section>
-    </div>
+    </Widget>
 </template>

@@ -1,7 +1,7 @@
 <template>
     <Widget class="widgetsection s flex1 " >
         <WidgetTitle role="title" class="flex flexcenter pad050 widgetTitle" >
-            Interest Over Time
+            Credit Interest Over Time
         </WidgetTitle>
         <section role="date" >
 

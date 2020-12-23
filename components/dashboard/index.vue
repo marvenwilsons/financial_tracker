@@ -10,6 +10,8 @@
             <BreakDown />
             <div class="margin050" ></div>
             <Interest />
+            <div class="margin050" ></div>
+            <SpendingGrowth />
         </section>
         <!-- sec: total spending list of all transaction for this month, ei: PRESTO: $900 -->
         <!-- sec: get pre authorized transaction days, ei: LIFEINS: Every 30th of the month  -->
@@ -22,13 +24,15 @@ import AssetCreditComponent from './asset-credit'
 import BarDetails from '@/components/asset-credit/bar-details'
 import BreakDown from '@/components/break-down/monthly-break-down.vue'
 import Interest from '@/components/break-down/interest.vue'
+import SpendingGrowth from '@/components/break-down/spending-growth-overtime.vue'
 
 export default {
     components: {
         AssetCreditComponent,
         BarDetails,
         BreakDown,
-        Interest
+        Interest,
+        SpendingGrowth
     },
     data: () => ({
         rawData: [],

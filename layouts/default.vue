@@ -44,7 +44,13 @@
           <div class="fullwidth flex flexend borderRad4" >
             <nuxt style="width:900px;" />
           </div>
+
         </section>
+          <div class="pad125 flex flexcenter" style="background: #26344a; color: #afafaf; border-top:1px solid #677080" >
+            <span>
+              Marven Wilson Donque | Copyright 2020
+            </span>
+          </div>
       </v-container>
     </v-main>
   </v-app>
