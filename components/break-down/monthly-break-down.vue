@@ -54,6 +54,12 @@ export default {
     watch: {
         selectedMonth(month) {
             this.mbd_ready = false
+            this.$store.state.categories.map(e => {
+                this.tally[e.value] = {}
+                this.tally[e.value].total = 0
+                this.tally[e.value].items = []
+            })
+            
             this.statements.map(item => {
                 if(item.report.monthOf == this.selectedMonth && item.report.yearOf == this.selectedYear) {
                     // debit

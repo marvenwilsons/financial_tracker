@@ -15,6 +15,9 @@
                 <div class="colorwhite pointer marginright125" >
                   Account Details
                 </div>
+                <div class="colorwhite pointer marginright125" >
+                  Transaction Purpose
+                </div>
                 <div class="colorwhite pointer " >
                   Login & Security
                 </div>
