@@ -1,5 +1,5 @@
 <template>
-    <div style="min-height:750px;" class="widgetsection s flex1 " >
+    <Widget style="min-height:750px;" class="flex1 " >
         <section role="title" class="flex flexcenter pad125 widgetTitle" >
             Monthly Spending Tally
         </section>
@@ -26,14 +26,14 @@
                 <!--  -->
             </div>
         </section>
-    </div>
+    </Widget>
 </template>
 
 <script>
 import MBD_ITEM from './mbd-item'
 export default {
     components: {
-        MBD_ITEM
+        MBD_ITEM,
     },
     data: () => ({
         cal: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -41,7 +41,7 @@ export default {
         selectedYear: undefined,
         availableYears: undefined,
         tally: {},
-        mbd_ready: true
+        mbd_ready: false
     }),
     computed: {
         statements() {
@@ -63,7 +63,8 @@ export default {
                         })
 
                         item.statements.debit.items.map((e,i) => {
-                            this.tally[e.transaction_purpose] = Math.round(withdrawns.reduce((total,num) => total + num))
+                            this.tally[e.transaction_purpose].total = Math.round(withdrawns.reduce((total,num) => total + num))
+                            this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
                     // credit
@@ -72,11 +73,15 @@ export default {
                             return e.withdrawn_amount
                         })
                         item.statements.credit.items.map((e,i) => {
-                            this.tally[e.transaction_purpose] =  this.tally[e.transaction_purpose] + Math.round(withdrawns.reduce((total,num) => total + num))
+                            console.log(this.tally)
+                            this.tally[e.transaction_purpose].total =  this.tally[e.transaction_purpose].total + Math.round(withdrawns.reduce((total,num) => total + num))
+                            this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
                 }
             })
+            console.log(this.tally)
+
             setTimeout(() => {
                 this.mbd_ready = true
             },0)
@@ -84,10 +89,13 @@ export default {
         statements() {
             if(this.selectedMonth == undefined) {
                 this.$store.state.categories.map(e => {
-                    this.tally[e.value] = 0
+                    this.tally[e.value] = {}
+                    this.tally[e.value].total = 0
+                    this.tally[e.value].items = []
                 })
 
                 setTimeout(() => {
+                    this.mbd_ready = true
                     this.selectedMonth = 'Jan'
                     this.availableYears = this.$store.state.statementYears
                     this.selectedYear = this.availableYears[0]

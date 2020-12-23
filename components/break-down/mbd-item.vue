@@ -11,7 +11,7 @@
             </div> -->
             <div style="border" class="flex1 flex flexend" >
                 <span style="color:yellow;" >
-                   <pre>{{ moneyFormater(tally[item.value]) }}</pre>
+                   <pre >{{ moneyFormater(tally[item.value].total) }}</pre>
                 </span>
             </div>
         </div>

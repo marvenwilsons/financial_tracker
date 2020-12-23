@@ -1,7 +1,7 @@
 <template>
     <div class="widgetsection s flex1 " >
         <section role="title" class="flex flexcenter pad050 widgetTitle" >
-            Interest Over Time
+            Spending Growth Over Time
         </section>
         <section role="date" >
 
