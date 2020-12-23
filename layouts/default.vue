@@ -13,13 +13,13 @@
             <div>
               <div class="flex" >
                 <div class="colorwhite pointer marginright125" >
-                  Account Details
+                  <NuxtLink to="/account-details">Account Details</NuxtLink>
                 </div>
                 <div class="colorwhite pointer marginright125" >
-                  Transaction Purpose
+                  <NuxtLink to="/transaction-purpose">Transaction Purpose</NuxtLink>
                 </div>
                 <div class="colorwhite pointer " >
-                  Login & Security
+                  <NuxtLink to="/login-security">Login & Security</NuxtLink>
                 </div>
               </div>
             </div>
