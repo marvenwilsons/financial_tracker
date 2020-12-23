@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4 class="colorwhite" >Dashboard</h4>
+        <h4 class="colorwhite" >Monthly Report</h4>
         <v-divider color="#677180" ></v-divider>
         <section role="asset value vs liability" v-if="rawData.length" class="s flex marginbottom125" >
             <AssetCreditComponent @barClick="barClick" :StatementDataSet="rawData" />
@@ -9,9 +9,8 @@
         <section role="spending break down & Credit Interest Charge" class="flex flexcol" >
             <BreakDown />
             <div class="margin050" ></div>
-            <Interest />
+            <MonthlyIncome />
             <div class="margin050" ></div>
-            <SpendingGrowth />
         </section>
         <!-- sec: total spending list of all transaction for this month, ei: PRESTO: $900 -->
         <!-- sec: get pre authorized transaction days, ei: LIFEINS: Every 30th of the month  -->
@@ -23,16 +22,14 @@
 import AssetCreditComponent from './asset-credit'
 import BarDetails from '@/components/asset-credit/bar-details'
 import BreakDown from '@/components/break-down/monthly-break-down.vue'
-import Interest from '@/components/break-down/interest.vue'
-import SpendingGrowth from '@/components/break-down/spending-growth-overtime.vue'
+import MonthlyIncome from '@/components/break-down/monthly-income-flow.vue'
 
 export default {
     components: {
         AssetCreditComponent,
         BarDetails,
         BreakDown,
-        Interest,
-        SpendingGrowth
+        MonthlyIncome
     },
     data: () => ({
         rawData: [],

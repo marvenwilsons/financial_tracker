@@ -29,7 +29,7 @@
         <section style="border-radius:4px;" class="flex relative s margintop125 padbottom125" >
           <div style="min-width:200px; left:-42px; z-index:1; top:70px;" class="pad125 absolute widgetsection borderRad4"  >
             <div to="dashboard" class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/">Dashboard</NuxtLink>
+              <NuxtLink to="/">Monthly Report</NuxtLink>
             </div>
             <div class="pad025 padbottom050 padtop050 nav" >
               <NuxtLink to="/add-statement">Add Statements</NuxtLink>
@@ -40,6 +40,12 @@
             <div  class="pad025 padbottom050 padtop050 nav" >
               <NuxtLink to="/consult-spend">Consult & Spend</NuxtLink>
             </div>
+            <div  class="pad025 padbottom050 padtop050 nav" >
+              <NuxtLink to="/credit-interest">Credit Interest Report</NuxtLink>
+            </div>
+            <div  class="pad025 padbottom050 padtop050 nav" >
+              <NuxtLink to="/spending-growth">Spending Growth</NuxtLink>
+            </div>
           </div>
           <div class="fullwidth flex flexend borderRad4" >
             <nuxt style="width:900px;" />
@@ -48,7 +54,7 @@
         </section>
           <div class="pad125 flex flexcenter" style="background: #26344a; color: #afafaf; border-top:1px solid #677080" >
             <span>
-              Marven Wilson Donque | Copyright 2020
+              Donque Financial Tracking Limited | Copyright 2020
             </span>
           </div>
       </v-container>

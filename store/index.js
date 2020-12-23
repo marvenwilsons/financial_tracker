@@ -25,6 +25,10 @@ export const state = () => ({
         {value: 'remitance', text: 'Remitance'},
         {value: 'other', text: 'Other'},
         {value: 'income / deposit / workpay', text: 'Income / deposit / workpay'},
+    ],
+    incomeCategory: [
+        {value: 'gov-benefits', text: 'Gov Benefits'},
+        {value: 'income / deposit / workpay', text: 'Income / deposit / workpay'},
     ]
 })
 
