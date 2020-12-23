@@ -2,9 +2,14 @@
     <div>
         <h4 class="colorwhite" >Dashboard</h4>
         <v-divider color="#677180" ></v-divider>
-        <section v-if="rawData.length" class="s flex" >
+        <section role="asset value vs liability" v-if="rawData.length" class="s flex marginbottom125" >
             <AssetCreditComponent @barClick="barClick" :StatementDataSet="rawData" />
             <BarDetails :barDetails="barDetails" />
+        </section>
+        <section role="spending break down & Credit Interest Charge" class="flex flexcol" >
+            <BreakDown />
+            <div class="margin050" ></div>
+            <Interest />
         </section>
         <!-- sec: total spending list of all transaction for this month, ei: PRESTO: $900 -->
         <!-- sec: get pre authorized transaction days, ei: LIFEINS: Every 30th of the month  -->
@@ -15,10 +20,15 @@
 <script>
 import AssetCreditComponent from './asset-credit'
 import BarDetails from '@/components/asset-credit/bar-details'
+import BreakDown from '@/components/break-down/monthly-break-down.vue'
+import Interest from '@/components/break-down/interest.vue'
+
 export default {
     components: {
         AssetCreditComponent,
-        BarDetails
+        BarDetails,
+        BreakDown,
+        Interest
     },
     data: () => ({
         rawData: [],
@@ -32,7 +42,8 @@ export default {
                 balance_amount: parseFloat(e.balance_amount.split('$')[1].replace(',','')),
                 date: e.date.split('T')[0].replace('-','/').replace('-','/'),
                 withdrawn_amount: parseFloat(e.withdrawn_amount.split('$')[1].replace(',','')),
-                deposited_amount: parseFloat(e.deposited_amount.split('$')[1].replace(',',''))
+                deposited_amount: parseFloat(e.deposited_amount.split('$')[1].replace(',','')),
+                transaction_purpose: e.transaction_purpose
             }
         })
         this.rawData = x

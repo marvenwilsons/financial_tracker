@@ -59,4 +59,7 @@ export default {
   color: white;
   transition: 500ms;
 }
+.widgetTitle {
+  color: #afafaf
+}
 </style>

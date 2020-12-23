@@ -116,29 +116,9 @@
                 <div :style="{width:'140px', background: dataSet[index].transaction_purpose == 'none' ? '#c81c01' : '' }" >
                     <select :id="`${index}-transaction_purpose`" @change="inputChange" :style="{color:dataSet[index].transaction_purpose == 'none' ? '#afafaf' : 'white' , width:'140px'}">
                         <option value="none" > &nbsp; none</option>
-                        <option value="essential">Essential</option>
-                        <option value="grocery">Grocery</option>
-                        <option value="food-leisure">Food Leisure</option>
-                        <option value="transportation">Transportation</option>
-                        <option value="investment-self-improvement">Investment / Self Improvement</option>
-                        <option value="clothing-personal_spending">Clothing / personal</option>
-                        <option value="midical">Midical Speding</option>
-                        <option value="dept-payment">Dept-payment</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="online-subscription">Online Subscription</option>
-                        <option value="occasional-spending">Occasional Spending</option>
-                        <option value="bank-tax">Bank Tax</option>
-                        <option value="bank-insurance">Bank insurance</option>
-                        <option value="life-insurance">Life Insurerance</option>
-                        <option value="phone-monthly-fee">Phone Monthly Fee</option>
-                        <option value="interest-fee">Interest Fee</option>
-                        <option value="monthly-rent">Monthly Rent</option>
-                        <option value="monthly-account-fee">Monthly Account Fee</option>
-                        <option value="gov-benefits">Gov Benefits</option>
-                        <option value="savings">Savings</option>
-                        <option value="remitance">Remitance</option>
-                        <option value="other">Other</option>
-                        <option value="income / deposit / workpay" >Income / deposit / workpay</option>
+                        <option v-for="opt in $store.state.categories" :key="opt.value" :value="opt.value">
+                            {{opt.text}}
+                        </option>
                     </select>
                 </div>
             </div>

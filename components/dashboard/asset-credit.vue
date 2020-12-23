@@ -28,7 +28,7 @@
                 <div>
                     <small style="color:#afafaf" >
                         MUP: <span style="color:yellow;" >{{highestAssetValue ? moneyFormater(highestAssetValue) : 'N/A'}}</span> on 
-                        <span style="color:yellow;" > {{highestAssetValue ? dateFormater(assetMaximumPeak.date,'YYYY/MM/DD') : 'N/A'}} </span> - asset
+                        <span style="color:yellow;" > {{highestAssetValue ? highestAssetAmountDate : 'N/A'}} </span> - asset
                     </small>
                 </div>
                 <div 
@@ -67,7 +67,7 @@
                 </div>
             </div>
             <!--  -->
-            <div class="flex spacebetween">
+            <div class="flex spacebetween flexwrap flexcol">
                 <div class="flex2" >
                     <small style="color:#afafaf" >
                         MDP: 
@@ -78,6 +78,7 @@
                 </div>
                 <!-- bottom-option-bar -->
                 <bottomOptionBar
+                    class=""
                     @scrollToLeft="scroll('left')"
                     @scrollToRight="scroll('right')"
                     :StatementDataSet="statements"
@@ -119,6 +120,7 @@ export default {
         openSetting: false,
         months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         highestAssetValue: 0,
+        highestAssetAmountDate: undefined,
         highestCreditValue:0,
         highestAssetAmount: 0,
         highestCreditAmount: 0,
@@ -323,9 +325,12 @@ export default {
                 balance_amount: Math.round(item.balance_amount),
                 withdrawn_amount: item.withdrawn_amount,
                 deposited_amount: item.deposited_amount,
-                description: item.description
+                description: item.description,
+                transaction_purpose: item.transaction_purpose
             })
         })
+
+        this.$store.commit('setStatementYears', scannedYears)
 
         // this.statements = parsedDataSet
 
@@ -437,10 +442,15 @@ export default {
             if(finalDataSet[i].statements.credit.items.length == 0 && lastCreditDayStatement != undefined) {
                 finalDataSet[i].statements.credit = lastCreditDayStatement
                 finalDataSet[i].statements.credit.inheritFrom = creditDate
+            } else {
+                finalDataSet[i].statements.credit.inheritFrom = null
             }
+
             if(finalDataSet[i].statements.debit.items.length == 0 && lastDebitDayStatement != undefined) {
                 finalDataSet[i].statements.debit = lastDebitDayStatement
                 finalDataSet[i].statements.debit.inheritFrom = debitDate
+            } else {
+                finalDataSet[i].statements.debit.inheritFrom = null
             }
         }
 
@@ -527,6 +537,7 @@ export default {
                 // set asset highest value
                 if(finalAssetValue > this.highestAssetValue) {
                     this.highestAssetValue = finalAssetValue
+                    this.highestAssetAmountDate = finalDataSet[i].report.date
                 }
 
                 if(finalDeptValue > this.highestCreditValue) {
@@ -556,6 +567,8 @@ export default {
         }
 
         this.statements = finalDataSet
+
+        this.$store.commit('setStatements', this.statements)
 
     }
 }
