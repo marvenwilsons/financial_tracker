@@ -14,7 +14,7 @@
                     <small class="flex" >
                         <span style="color: #afafaf;" class="marginright025 flex1" >Credit:</span>  
                         <span class="flex1" style="color:orange;" >
-                            <pre >{{ moneyFormater(tally[item.value].total.debit) }}</pre>
+                            <pre >{{ moneyFormater(tally[item.value].total.credit) }}</pre>
                         </span>
                     </small>
                 </div>
@@ -22,7 +22,7 @@
                     <small class="flex" >
                         <span style="color: #afafaf;" class="marginright025 flex1" >Debit:</span>  
                         <span class="flex1" style="color:orange;" >
-                            <pre >{{ moneyFormater(tally[item.value].total.credit) }}</pre>
+                            <pre >{{ moneyFormater(tally[item.value].total.debit) }}</pre>
                         </span>
                     </small>
                 </div>

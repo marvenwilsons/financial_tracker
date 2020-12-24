@@ -56,7 +56,10 @@ export default {
             this.mbd_ready = false
             this.$store.state.categories.map(e => {
                 this.tally[e.value] = {}
-                this.tally[e.value].total = 0
+                this.tally[e.value].total = {
+                    debit: 0,
+                    credit: 0
+                }
                 this.tally[e.value].items = []
             })
             
@@ -69,13 +72,12 @@ export default {
                         })
 
                         item.statements.debit.items.map((e,i) => {
-                            this.tally[e.transaction_purpose].total = Math.round(deposited_amount.reduce((total,num) => total + num))
+                            this.tally[e.transaction_purpose].total.debit = Math.round(deposited_amount.reduce((total,num) => total + num))
                             this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
                 }
             })
-            console.log(this.tally)
 
             setTimeout(() => {
                 this.mbd_ready = true
@@ -85,7 +87,10 @@ export default {
             if(this.selectedMonth == undefined) {
                 this.$store.state.incomeCategory.map(e => {
                     this.tally[e.value] = {}
-                    this.tally[e.value].total = 0
+                    this.tally[e.value].total = {
+                        debit: 0,
+                        credit: 0
+                    }
                     this.tally[e.value].items = []
                 })
 

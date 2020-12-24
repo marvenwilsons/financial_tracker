@@ -83,9 +83,7 @@ export default {
                         item.statements.debit.items.map((e,i) => {
                             this.tally[e.transaction_purpose].total.debit = 
                                 Math.round(withdrawns.reduce((total,num) => total + num))
-                            if(e.transaction_purpose == 'grocery') {
-                                console.log(withdrawns, e.description)
-                            }
+
                             this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
