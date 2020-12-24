@@ -18,8 +18,11 @@
                 <div class="colorwhite pointer marginright125" >
                   <NuxtLink to="/transaction-purpose">Transaction Purpose</NuxtLink>
                 </div>
-                <div class="colorwhite pointer " >
+                <div class="colorwhite pointer marginright125" >
                   <NuxtLink to="/login-security">Login & Security</NuxtLink>
+                </div>
+                <div class="colorwhite pointer " >
+                  <NuxtLink to="/login-security">Privacy Statement</NuxtLink>
                 </div>
               </div>
             </div>
@@ -45,6 +48,9 @@
             </div>
             <div  class="pad025 padbottom050 padtop050 nav" >
               <NuxtLink to="/spending-growth">Spending Growth</NuxtLink>
+            </div>
+            <div  class="pad025 padbottom050 padtop050" >
+              <NuxtLink to="/my-notes">My Notes </NuxtLink>
             </div>
           </div>
           <div class="fullwidth flex flexend borderRad4" >
