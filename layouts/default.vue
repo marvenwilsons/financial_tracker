@@ -22,7 +22,7 @@
                   <NuxtLink to="/login-security">Login & Security</NuxtLink>
                 </div>
                 <div class="colorwhite pointer " >
-                  <NuxtLink to="/login-security">Privacy Statement</NuxtLink>
+                  <NuxtLink to="/privacy-statement">Privacy Statement</NuxtLink>
                 </div>
               </div>
             </div>
