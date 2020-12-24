@@ -7,22 +7,29 @@
             <div  class="flex widgetsection" >
                 <div 
                     v-for="item in cal" :key="item" @click="selectedMonth = item" 
-                    :class="['borderRad4', 'pad025', 'padleft050', 'padright050', 'calItem', selectedMonth == item ? 'active' : '']" 
+                    :class="['borderRad4', 'pad025', 'padleft050', 'padright050', 'calItem', 
+                    selectedMonth == item ? 'active' : '']" 
                     style="border: 1px solid #3b485c;" >{{item}}</div>
             </div>
             <div style="width:250px;" class="flex marginleft125 widgetsection" >
                 <!-- available years scaned from statement -->
                 <div 
-                
                     v-for="year in availableYears" :key="year"
-                    :class="['borderRad4', 'pad025', 'padleft050', 'padright050', 'calItem', selectedYear == year ? 'active' : '']" 
+                    :class="['borderRad4', 'pad025', 'padleft050', 'padright050', 'calItem',
+                    selectedYear == year ? 'active' : '']" 
                     style="border: 1px solid #3b485c;" >{{year}}</div>
             </div>
         </div>
         <div style="min-height:400px;" class="relative pad125" >
-            <div v-if="mbd_ready" style="min-height:400px; overflow: auto; border: 1px solid #3b485c" class="fullwidth pad050 padtop025 borderRad4 flex flexwrap" >
+            <div v-if="mbd_ready" 
+                style="min-height:400px; overflow: auto; border: 1px solid #3b485c" 
+                class="fullwidth pad050 padtop025 borderRad4 flex flexwrap" >
                 <!--  -->
-                <MBD_ITEM v-for="item in $store.state.categories" :key="item.value" :item="item" :tally="tally" ></MBD_ITEM>
+                <MBD_ITEM 
+                    v-for="item in $store.state.categories" 
+                    :key="item.value" 
+                    :item="item" 
+                    :tally="tally" ></MBD_ITEM>
                 <!--  -->
             </div>
         </div>
@@ -64,12 +71,13 @@ export default {
                 if(item.report.monthOf == this.selectedMonth && item.report.yearOf == this.selectedYear) {
                     // debit
                     if(item.statements.debit.items.length != 0) {
-                        const withdrawns = item.statements.debit.items.map(e => {
-                            return e.withdrawn_amount
-                        })
+                        const withdrawns = item.statements.debit.items.map(e => 
+                        e.withdrawn_amount)
 
                         item.statements.debit.items.map((e,i) => {
-                            this.tally[e.transaction_purpose].total = Math.round(withdrawns.reduce((total,num) => total + num))
+                            this.tally[e.transaction_purpose].total = 
+                                Math.round(withdrawns.reduce((total,num) => total + num))
+                                
                             this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
@@ -79,8 +87,10 @@ export default {
                             return e.withdrawn_amount
                         })
                         item.statements.credit.items.map((e,i) => {
-                            console.log(this.tally)
-                            this.tally[e.transaction_purpose].total =  this.tally[e.transaction_purpose].total + Math.round(withdrawns.reduce((total,num) => total + num))
+                            this.tally[e.transaction_purpose].total =  
+                                this.tally[e.transaction_purpose].total + 
+                                Math.round(withdrawns.reduce((total,num) => total + num))
+
                             this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
