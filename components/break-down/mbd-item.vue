@@ -9,10 +9,31 @@
             <!-- <div class="relative borderRad4" style="width:80%; height:10px; background: #515c6e;" >
                 <div class="fullheight-percent absolute borderRad4" :style="{background:'orange', width:'90%' }" ></div>
             </div> -->
-            <div style="border" class="flex1 flex flexend" >
-                <span style="color:yellow;" >
-                   <pre >{{ moneyFormater(tally[item.value].total) }}</pre>
-                </span>
+            <div style="border" class="flex1 flex flexwrap spacebetween" >
+                <div>
+                    <small class="flex" >
+                        <span style="color: #afafaf;" class="marginright025 flex1" >Credit:</span>  
+                        <span class="flex1" style="color:orange;" >
+                            <pre >{{ moneyFormater(tally[item.value].total.debit) }}</pre>
+                        </span>
+                    </small>
+                </div>
+                <div>
+                    <small class="flex" >
+                        <span style="color: #afafaf;" class="marginright025 flex1" >Debit:</span>  
+                        <span class="flex1" style="color:orange;" >
+                            <pre >{{ moneyFormater(tally[item.value].total.credit) }}</pre>
+                        </span>
+                    </small>
+                </div>
+                 <div>
+                    <small class="flex" >
+                        <span style="color: #afafaf;" class="marginright025 flex1" >Total:</span>  
+                        <span class="flex1" style="color:yellow;" >
+                            <pre >{{ moneyFormater(tally[item.value].total.credit + tally[item.value].total.debit) }}</pre>
+                        </span>
+                    </small>
+                </div>
             </div>
         </div>
     </div>
@@ -26,6 +47,8 @@ export default {
     }),
     methods: {
          moneyFormater(value) {
+            if(isNaN(value)) return '$0.00'
+
             var formatter = new Intl.NumberFormat('en-US', {
             style: 'currency',
             currency: 'USD',

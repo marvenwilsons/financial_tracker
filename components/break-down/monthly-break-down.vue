@@ -63,7 +63,10 @@ export default {
             this.mbd_ready = false
             this.$store.state.categories.map(e => {
                 this.tally[e.value] = {}
-                this.tally[e.value].total = 0
+                this.tally[e.value].total = {
+                    debit: 0,
+                    credit: 0
+                }
                 this.tally[e.value].items = []
             })
             
@@ -71,13 +74,18 @@ export default {
                 if(item.report.monthOf == this.selectedMonth && item.report.yearOf == this.selectedYear) {
                     // debit
                     if(item.statements.debit.items.length != 0) {
-                        const withdrawns = item.statements.debit.items.map(e => 
-                        e.withdrawn_amount)
 
+                        // get withdrawns
+                        const withdrawns = item.statements.debit.items
+                        .map(e => e.withdrawn_amount)
+
+                        // set
                         item.statements.debit.items.map((e,i) => {
-                            this.tally[e.transaction_purpose].total = 
+                            this.tally[e.transaction_purpose].total.debit = 
                                 Math.round(withdrawns.reduce((total,num) => total + num))
-                                
+                            if(e.transaction_purpose == 'grocery') {
+                                console.log(withdrawns, e.description)
+                            }
                             this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
@@ -87,17 +95,15 @@ export default {
                             return e.withdrawn_amount
                         })
                         item.statements.credit.items.map((e,i) => {
-                            this.tally[e.transaction_purpose].total =  
-                                this.tally[e.transaction_purpose].total + 
+                            this.tally[e.transaction_purpose].total.credit =  
                                 Math.round(withdrawns.reduce((total,num) => total + num))
+                                
 
                             this.tally[e.transaction_purpose].items.push(e)
                         })
                     }
                 }
             })
-            console.log(this.tally)
-
             setTimeout(() => {
                 this.mbd_ready = true
             },0)
@@ -106,7 +112,10 @@ export default {
             if(this.selectedMonth == undefined) {
                 this.$store.state.categories.map(e => {
                     this.tally[e.value] = {}
-                    this.tally[e.value].total = 0
+                    this.tally[e.value].total = {
+                        debit: 0,
+                        credit: 0
+                    }
                     this.tally[e.value].items = []
                 })
 
