@@ -2,7 +2,7 @@
     <div class="fullwidth widgetsection borderRad4 relative" >
         <!-- settings -->
         <DonqueSettingComponent ref="setting" >
-            <template v-slot:selected="{ selected }">
+            <template v-slot:selected="{ selected }">  <!-- <-- this is <slot :selected="selected" name="selected" ></slot> -->
                 <AssetCreditCoverageSetting  v-if="selected == 'Coverage'" />
                 <AssetCreditBarSetting       v-if="selected == 'Bar'" />
                 <AssetCreditDataDisplay      v-if="selected == 'Data Display'"/>
