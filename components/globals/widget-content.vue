@@ -6,7 +6,8 @@
             <transition name="fade2" >
                 <section v-if="modal" class="absolute fullwidth fullheight-percent" style="z-index:1" >
                     <div @click="modal = false" class="flex flexcenter flexcol fullheight-percent pad125 relative" >
-                        <div @click.stop="" class="widgetsection borderRad4" style="max-height:80%; min-width:80%; max-width:80%; overflow:auto" >
+                        <div @click.stop="" class="widgetsection borderRad4 pad125" 
+                            style="max-height:80%; min-width:80%; max-width:80%; overflow:auto; border: 1px solid #3b485c;" >
                             <slot :modalContext="modalContext" name="modal" ></slot>
                         </div>
                     </div>

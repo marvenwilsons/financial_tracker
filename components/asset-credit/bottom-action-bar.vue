@@ -3,11 +3,15 @@
         <div class="fullwidth" >
             <small>
                 <span style="color:#afafaf;" >Coverage:</span> 
-                <span style="color:yellow" >({{StatementDataSet.length}} Days) <span style="color:#afafaf;" >
-                    From:</span> {{StatementDataSet[StatementDataSet.length - 1].date}} 
+                <span style="color:yellow" >({{StatementDataSet.length}} Days) 
+                    <!-- <span style="color:#afafaf;" >
+                        From:
+                    </span> {{StatementDataSet[StatementDataSet.length - 1].date}}  -->
                 </span> 
-                <span style="color:yellow" >  <span style="color:#afafaf;" >
-                    To:</span> {{StatementDataSet[0].date}}
+                <span style="color:yellow" >  
+                    <!-- <span style="color:#afafaf;" >
+                    To:
+                    </span> {{StatementDataSet[0].date}} -->
                 </span>
             </small>
         </div>
