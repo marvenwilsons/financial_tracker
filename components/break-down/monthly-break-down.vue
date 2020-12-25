@@ -1,5 +1,5 @@
 <template>
-    <Widget style="min-height:744px;" class="flex1 " >
+    <Widget style="min-height:700px;" class="flex1 " >
         <WidgetTitle>
             Monthly Spending Tally
         </WidgetTitle>
@@ -28,7 +28,7 @@
                     <!--  -->
                     <MBD_ITEM 
                         @itemClick="showModal"
-                        v-for="item in $store.state.categories" 
+                        v-for="item in $store.state.spendCategory" 
                         :key="item.value" 
                         :item="item" 
                         :tally="tally" ></MBD_ITEM>
@@ -41,20 +41,8 @@
                     <div class="padleft125 padtop125">
                         {{selectedMonth}} - {{modalContext.length && modalContext[0].transaction_purpose}}
                     </div>
-                    <div class="flex spacebetween pad125" >
-                        <div>Date 
-                            <div style="color: #afafaf" v-for="(item,index) in modalContext" :key="`${item.date}-${index}`" ><small>{{item.date}}</small></div>
-                        </div>
-                        <div>Account 
-                            <div style="color: #afafaf" v-for="(item,index) in modalContext" :key="`${item.statement_type}-${index}`" ><small>{{item.statement_type}}</small></div>
-                        </div>
-                        <div>Description
-                            <div style="color: #afafaf" v-for="(item,index) in modalContext" :key="`${item.description}-${index + 3}`" ><small>{{item.description}}</small></div>
-                        </div>
-                        <div>Withdrawn Amount
-                            <div style="color: orange" v-for="(item,index) in modalContext" :key="`${item.description}-${index + 9}`" ><small>{{moneyFormater(item.withdrawn_amount)}}</small></div>
-                        </div>
-                    </div>
+                    <!-- modal table -->
+                    <ModalTable :modalContext="modalContext" />
                 </div>
             </template>
         </WidgetContent>
@@ -63,9 +51,13 @@
 
 <script>
 import MBD_ITEM from './mbd-item'
+import ModalTable from './modal-table'
+import MyMixin from '@/m'
 export default {
+    mixins: [MyMixin],
     components: {
         MBD_ITEM,
+        ModalTable
     },
     data: () => ({
         cal: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -80,26 +72,10 @@ export default {
             return this.$store.state.statements
         }
     },
-    methods: {
-       moneyFormater(value) {
-            if(isNaN(value)) return '$0.00'
-
-            var formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-
-            // These options are needed to round to whole numbers if that's what you want.
-            //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-            //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-            });
-
-            return formatter.format(value)
-        },
-    },
     watch: {
         selectedMonth(month) {
             this.mbd_ready = false
-            this.$store.state.categories.map(e => {
+            this.$store.state.spendCategory.map(e => {
                 this.tally[e.value] = {}
                 this.tally[e.value].total = {
                     debit: [],
@@ -115,19 +91,19 @@ export default {
 
                         // set total
                         item.statements.debit.items
-                        .map(e => this.tally[e.transaction_purpose].total.debit.push(e.withdrawn_amount) )
+                        .map(e => this.tally[e.transaction_purpose] && this.tally[e.transaction_purpose].total.debit.push(e.withdrawn_amount) )
 
                         // set
-                        item.statements.debit.items.map(e => this.tally[e.transaction_purpose].items.push(e))
+                        item.statements.debit.items.map(e => this.tally[e.transaction_purpose] && this.tally[e.transaction_purpose].items.push(e))
                     }
                     // credit
                     if(item.statements.credit.items.length != 0) {
                         // get withdrawns
                         item.statements.credit.items
-                        .map(e => this.tally[e.transaction_purpose].total.credit.push(e.withdrawn_amount)) 
+                        .map(e => this.tally[e.transaction_purpose] && this.tally[e.transaction_purpose].total.credit.push(e.withdrawn_amount)) 
 
                         // set
-                        item.statements.credit.items.map(e => this.tally[e.transaction_purpose].items.push(e))
+                        item.statements.credit.items.map(e => this.tally[e.transaction_purpose] && this.tally[e.transaction_purpose].items.push(e))
                     }
                 }
             })
@@ -137,7 +113,7 @@ export default {
         },
         statements() {
             if(this.selectedMonth == undefined) {
-                this.$store.state.categories.map(e => {
+                this.$store.state.spendCategory.map(e => {
                     this.tally[e.value] = {}
                     this.tally[e.value].total = {
                         debit: [],

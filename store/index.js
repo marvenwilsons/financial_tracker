@@ -48,7 +48,7 @@ export const state = () => ({
         {value: 'phone-monthly-fee', text: 'Phone Monthly Fee'},
         {value: 'monthly-rent', text: 'Monthly Rent'},
         {value: 'remitance', text: 'Remitance'},
-        {value: 'other', text: 'Other'},
+        {value: 'other', text: 'Other'}
     ]
 })
 

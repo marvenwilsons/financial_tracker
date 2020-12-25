@@ -35,12 +35,12 @@
             <!-- widget modal content -->
             <template  #modal="{modalContext}" >
                 <!-- <DonqueTable :dataSet="modalContext.items" /> -->
-                <div >
-                    <pre>
-                        <small>
-                            {{modalContext.items}}
-                        </small>
-                    </pre>
+                <div>
+                    <div class="padleft125 padtop125">
+                        {{selectedMonth}} - {{modalContext.length && modalContext[0].transaction_purpose}}
+                    </div>
+                    <!-- modal table -->
+                    <ModalTable :modalContext="modalContext" />
                 </div>
             </template>
         </WidgetContent>
@@ -50,11 +50,13 @@
 
 <script>
 import MBD_ITEM from './mbd-item'
-import DonqueTable from '../Table/table.vue'
+import ModalTable from './modal-table'
+import MyMixin from '@/m'
 export default {
+    mixins:[MyMixin],
     components: {
         MBD_ITEM,
-        DonqueTable
+        ModalTable
     },
     data: () => ({
         cal: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -68,9 +70,6 @@ export default {
         statements() {
             return this.$store.state.statements
         }
-    },
-    methods: {
-       
     },
     watch: {
         selectedMonth(month) {
