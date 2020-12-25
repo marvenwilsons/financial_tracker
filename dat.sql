@@ -8,7 +8,7 @@ CREATE TABLE users (
     user_notes jsonb NOT NULL
 );
 
-CREATE TABLE _statement (
+CREATE TABLE statement (
     id uuid NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),
     date date NOT NULL,
     description TEXT NOT NULL,
