@@ -1,5 +1,5 @@
 <template>
-    <Widget style="min-height:300px;" class="flex1 " >
+    <Widget style="height:400px;" class="flex1 " >
         <WidgetTitle>
             Monthly Income Flow
         </WidgetTitle>
@@ -19,21 +19,42 @@
                     style="border: 1px solid #3b485c;" >{{year}}</div>
             </div>
         </div>
-        <div style="min-height:100px;" class="relative pad125" >
-            <div v-if="mbd_ready" style="min-height:100px; overflow: auto; border: 1px solid #3b485c" class="fullwidth pad050 padtop025 borderRad4 flex flexwrap" >
-                <!--  -->
-                <MBD_ITEM v-for="item in $store.state.incomeCategory" :key="item.value" :item="item" :tally="tally" ></MBD_ITEM>
-                <!--  -->
-            </div>
-        </div>
+        <WidgetContent >
+            <!-- widget primary content -->
+            <template #widgetContent="{showModal}">
+                <div style="min-height:300px;" class="relative" >
+                    <div v-if="mbd_ready" style="min-height:100px; overflow: auto; " class="flex padbottom050"  >
+                        <MBD_ITEM 
+                            @itemClick="showModal"
+                            v-for="item in $store.state.incomeCategory" 
+                            :key="item.value" :item="item" 
+                            :tally="tally" ></MBD_ITEM>
+                    </div>
+                </div>
+            </template>
+            <!-- widget modal content -->
+            <template  #modal="{modalContext}" >
+                <!-- <DonqueTable :dataSet="modalContext.items" /> -->
+                <div >
+                    <pre>
+                        <small>
+                            {{modalContext.items}}
+                        </small>
+                    </pre>
+                </div>
+            </template>
+        </WidgetContent>
+
     </Widget>
 </template>
 
 <script>
 import MBD_ITEM from './mbd-item'
+import DonqueTable from '../Table/table.vue'
 export default {
     components: {
         MBD_ITEM,
+        DonqueTable
     },
     data: () => ({
         cal: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -41,7 +62,7 @@ export default {
         selectedYear: undefined,
         availableYears: undefined,
         tally: {},
-        mbd_ready: false
+        mbd_ready: false,
     }),
     computed: {
         statements() {

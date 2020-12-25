@@ -3,13 +3,16 @@
         <section class="pad125 relative" >
         <section style="border: 1px solid #3b485c" class="fullwidth borderRad4 flex flexwrap relative" >
             <!-- modal -->
-            <section v-if="modal" class="absolute fullwidth fullheight-percent" style="z-index:1" >
-                <div @click="modal = false" class="flex flexcenter flexcol fullheight-percent pad125 relative" >
-                    <div @click.stop="" class="widgetsection borderRad4" style="min-height:80%; max-height:80%; min-width:80%; max-width:80%; overflow:auto" >
-                        <slot :modalContext="modalContext" name="modal" ></slot>
+            <transition name="fade2" >
+                <section v-if="modal" class="absolute fullwidth fullheight-percent" style="z-index:1" >
+                    <div @click="modal = false" class="flex flexcenter flexcol fullheight-percent pad125 relative" >
+                        <div @click.stop="" class="widgetsection borderRad4" style="max-height:80%; min-width:80%; max-width:80%; overflow:auto" >
+                            <slot :modalContext="modalContext" name="modal" ></slot>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </transition>
+
             <!-- main content -->
             <section >
                 <slot :showModal="showModal" name="widgetContent" ></slot>
@@ -35,3 +38,12 @@ export default {
     }
 }
 </script>
+
+<style >
+.fade2-enter-active, .fade2-leave-active {
+  transition: opacity 500ms;
+}
+.fade2-enter, .fade2-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>

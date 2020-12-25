@@ -50,9 +50,10 @@ export default {
         height: 0
     }),
     mounted() {
-        setTimeout(() => {
-            this.$emit('chunkAdded', this.index + 1)
-        }, this.index)
+        // setTimeout(() => {
+            
+        // }, this.index)
+        this.$emit('chunkAdded', this.index + 1)
     }
 }
 </script>
