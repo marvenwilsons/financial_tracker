@@ -31,11 +31,11 @@
                         <span style="color:yellow;" > {{highestAssetValue ? highestAssetAmountDate : 'N/A'}} </span> - asset
                     </small>
                 </div>
-                <div 
+                <!-- <div 
                     @click="() =>  $refs.setting.toggle(['Coverage', 'Data Display', 'Bar'])" 
                     class="pointer" >
                     ⚙️ 
-                </div>
+                </div> -->
             </div>
             <!--  -->
             <div style="height:250px; align-items:center; overflow:hidden;" class="relative flex" >

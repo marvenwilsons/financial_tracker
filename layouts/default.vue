@@ -16,7 +16,7 @@
                   <NuxtLink to="/account-details">Account Details</NuxtLink>
                 </div>
                 <div class="colorwhite pointer marginright125" >
-                  <NuxtLink to="/transaction-purpose">Transaction Purpose</NuxtLink>
+                  <NuxtLink to="/settings">Settings</NuxtLink>
                 </div>
                 <div class="colorwhite pointer marginright125" >
                   <NuxtLink to="/login-security">Login & Security</NuxtLink>
