@@ -32,25 +32,53 @@
         <section style="border-radius:4px;" class="flex relative s margintop125 padbottom125" >
           <div style="min-width:200px; left:-42px; z-index:1; top:70px;" class="pad125 absolute widgetsection borderRad4"  >
             <div to="dashboard" class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/">Monthly Report</NuxtLink>
+              <NuxtLink @click="active = 'Monthly Report' " to="/">
+                <span @click="active = 'Monthly Report' " :class="[active == 'Monthly Report' ? 'active-link' : '']" >
+                  Monthly Report
+                </span>
+              </NuxtLink>
             </div>
             <div class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/add-statement">Add Statements</NuxtLink>
+              <NuxtLink  to="/add-statement">
+                <span @click="active = 'Add Statements' " :class="[active == 'Add Statements' ? 'active-link' : '']" >
+                  Add Statements
+                </span>
+              </NuxtLink>
             </div>
             <div  class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/manage-statements">Manage Statements</NuxtLink>
+              <NuxtLink to="/manage-statements">
+                <span @click="active = 'Manage Statements' " :class="[active == 'Manage Statements' ? 'active-link' : '']" >
+                  Manage Statements
+                </span>
+              </NuxtLink>
             </div>
             <div  class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/consult-spend">Consult & Spend</NuxtLink>
+              <NuxtLink to="/consult-spend">
+                <span @click="active = 'Consult & Spend' " :class="[active == 'Consult & Spend' ? 'active-link' : '']" >
+                  Consult & Spend
+                </span>
+              </NuxtLink>
             </div>
             <div  class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/credit-interest">Credit Interest Report</NuxtLink>
+              <NuxtLink to="/credit-interest">
+                <span @click="active = 'Credit Interest Report' " :class="[active == 'Credit Interest Report' ? 'active-link' : '']" >
+                  Credit Interest Report
+                </span>
+              </NuxtLink>
             </div>
             <div  class="pad025 padbottom050 padtop050 nav" >
-              <NuxtLink to="/spending-growth">Spending Growth</NuxtLink>
+              <NuxtLink to="/spending-growth">
+                <span @click="active = 'Spending Growth' " :class="[active == 'Spending Growth' ? 'active-link' : '']" >
+                  Spending Growth
+                </span>
+              </NuxtLink>
             </div>
             <div  class="pad025 padbottom050 padtop050" >
-              <NuxtLink to="/my-notes">My Notes </NuxtLink>
+              <NuxtLink to="/my-notes">
+                <span @click="active = 'My Notes' " :class="[active == 'My Notes' ? 'active-link' : '']" >
+                  My Notes
+                </span>
+              </NuxtLink>
             </div>
           </div>
           <div class="fullwidth flex flexend borderRad4" >
@@ -70,14 +98,19 @@
 
 <script>
 export default {
-  data () {
-    return {
+  data: () => ({
+    active: undefined
+  }),
+  methods: {
+    onLinkClick() {
+      
     }
   },
   created() {
+    this.active = 'Monthly Report'
     setTimeout(() => {
             this.$vuetify.theme.themes.light.primary = '#409eff'
-        }, 0);
+    }, 0);
   }
 }
 </script>
@@ -94,5 +127,8 @@ export default {
 }
 .widgetTitle {
   color: #afafaf
+}
+.active-link {
+  color: #ffff00;
 }
 </style>
