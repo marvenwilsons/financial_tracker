@@ -5,7 +5,8 @@ CREATE TABLE users (
     email VARCHAR(500) NOT NULL,
     user_password VARCHAR(250) NOT NULL,
     user_settings jsonb NOT NULL,
-    user_notes jsonb NOT NULL
+    user_notes jsonb NOT NULL,
+    user_activity jsonb NOT NULL
 );
 
 CREATE TABLE statement (
