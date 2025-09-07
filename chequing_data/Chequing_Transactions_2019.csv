@@ -1,0 +1,32 @@
+Date,Description,Withdrawals,Deposits,Balance,Account Type
+2019-01-02,Payroll Deposit,0.0,1500.0,1500.0,Chequing
+2019-01-03,Debit Purchase - Walmart,45.23,0.0,1454.77,Chequing
+2019-01-05,ATM Withdrawal,100.0,0.0,1354.77,Chequing
+2019-01-10,Interac e-Transfer SENT,250.0,0.0,1104.77,Chequing
+2019-02-01,Payroll Deposit,0.0,1600.0,2704.77,Chequing
+2019-02-02,Debit Purchase - No Frills,89.34,0.0,2615.43,Chequing
+2019-02-05,Bill Payment - Rogers,120.0,0.0,2495.43,Chequing
+2019-03-01,Payroll Deposit,0.0,1550.0,4045.43,Chequing
+2019-03-03,Debit Purchase - Shoppers Drug Mart,25.5,0.0,4019.93,Chequing
+2019-03-05,Interac e-Transfer RECEIVED,0.0,200.0,4219.93,Chequing
+2019-04-01,Payroll Deposit,0.0,1500.0,5719.93,Chequing
+2019-04-02,Debit Purchase - Metro,67.45,0.0,5652.48,Chequing
+2019-04-04,ATM Withdrawal,200.0,0.0,5452.48,Chequing
+2019-05-01,Payroll Deposit,0.0,1550.0,7002.48,Chequing
+2019-05-03,Bill Payment - Hydro,140.0,0.0,6862.48,Chequing
+2019-05-05,Debit Purchase - Canadian Tire,58.23,0.0,6804.25,Chequing
+2019-06-01,Payroll Deposit,0.0,1600.0,8404.25,Chequing
+2019-06-02,Debit Purchase - Amazon,120.15,0.0,8284.1,Chequing
+2019-06-05,ATM Withdrawal,100.0,0.0,8184.1,Chequing
+2019-07-01,Payroll Deposit,0.0,1600.0,9784.1,Chequing
+2019-07-03,Debit Purchase - Costco,220.0,0.0,9564.1,Chequing
+2019-08-01,Payroll Deposit,0.0,1600.0,11164.1,Chequing
+2019-08-02,Debit Purchase - Walmart,82.5,0.0,11081.6,Chequing
+2019-09-01,Payroll Deposit,0.0,1600.0,12681.6,Chequing
+2019-09-02,Bill Payment - Rogers,120.0,0.0,12561.6,Chequing
+2019-10-01,Payroll Deposit,0.0,1600.0,14161.6,Chequing
+2019-10-02,Debit Purchase - Canadian Tire,60.0,0.0,14101.6,Chequing
+2019-11-01,Payroll Deposit,0.0,1600.0,15701.6,Chequing
+2019-11-03,Debit Purchase - Metro,40.0,0.0,15661.6,Chequing
+2019-12-01,Payroll Deposit,0.0,1600.0,17261.6,Chequing
+2019-12-04,Bill Payment - Hydro,150.0,0.0,17111.6,Chequing

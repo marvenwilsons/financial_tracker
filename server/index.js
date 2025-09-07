@@ -19,13 +19,30 @@ app.get('/statement/debit' , async (req,res) => {
         results: result.rows
     })
 })
-// get all 
+// get all
 app.get('/statement' , async (req,res) => {
     const result = await db(`SELECT * FROM statement ORDER BY date ASC`)
     res.status(200).json({
         status: 'success',
         results: result.rows
     })
+})
+
+// get all chequing statements
+app.get('/chequing-statements' , async (req,res) => {
+    try {
+        const result = await db(`SELECT * FROM chequing_statements ORDER BY date ASC`)
+        res.status(200).json({
+            status: 'success',
+            results: result.rows
+        })
+    } catch (error) {
+        console.error('Error fetching chequing statements:', error)
+        res.status(500).json({
+            status: 'error',
+            message: 'Failed to fetch chequing statements'
+        })
+    }
 })
 // get a specific statement
 app.get('/statement/:from_to', (req,res) => {
@@ -43,7 +60,7 @@ app.post('/statement', async (req,res) => {
         console.log('==> Adding statement')
         const { dataSet, statement_type } = req.body
         const duplicateCheckResult = await statement.isRepeated(dataSet,db)
-        
+
         if(duplicateCheckResult.repeatedItems == 0) {
             console.log('==> Adding Entry')
             console.log('==> Data OK! Adding Statement')

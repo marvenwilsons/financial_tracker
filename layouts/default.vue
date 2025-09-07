@@ -73,6 +73,13 @@
                 </span>
               </NuxtLink>
             </div>
+            <div  class="pad025 padbottom050 padtop050 nav" >
+              <NuxtLink to="/analytics">
+                <span @click="active = 'Analytics Dashboard' " :class="[active == 'Analytics Dashboard' ? 'active-link' : '']" >
+                  Analytics Dashboard
+                </span>
+              </NuxtLink>
+            </div>
             <div  class="pad025 padbottom050 padtop050" >
               <NuxtLink to="/my-notes">
                 <span @click="active = 'My Notes' " :class="[active == 'My Notes' ? 'active-link' : '']" >
@@ -103,7 +110,7 @@ export default {
   }),
   methods: {
     onLinkClick() {
-      
+
     }
   },
   created() {

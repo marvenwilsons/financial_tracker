@@ -1,0 +1,27 @@
+Date,Description,Withdrawals,Deposits,Balance,Account Type
+2021-01-04,Payroll Deposit,0.0,1500.0,1500.0,Chequing
+2021-01-05,Debit Purchase - Walmart,45.67,0.0,1454.33,Chequing
+2021-01-08,Interac e-Transfer SENT,100.0,0.0,1354.33,Chequing
+2021-02-01,Payroll Deposit,0.0,1520.0,2874.33,Chequing
+2021-02-02,Debit Purchase - Metro,67.3,0.0,2807.03,Chequing
+2021-02-04,Bill Payment - Hydro,120.0,0.0,2687.03,Chequing
+2021-03-01,Payroll Deposit,0.0,1550.0,4237.03,Chequing
+2021-03-02,Debit Purchase - Shoppers,25.45,0.0,4211.58,Chequing
+2021-04-01,Payroll Deposit,0.0,1550.0,5761.58,Chequing
+2021-04-02,ATM Withdrawal,200.0,0.0,5561.58,Chequing
+2021-05-01,Payroll Deposit,0.0,1600.0,7161.58,Chequing
+2021-05-05,Debit Purchase - Costco,215.0,0.0,6946.58,Chequing
+2021-06-01,Payroll Deposit,0.0,1600.0,8546.58,Chequing
+2021-06-03,Bill Payment - Rogers,120.0,0.0,8426.58,Chequing
+2021-07-01,Payroll Deposit,0.0,1600.0,10026.58,Chequing
+2021-07-02,Debit Purchase - Canadian Tire,65.0,0.0,9961.58,Chequing
+2021-08-01,Payroll Deposit,0.0,1600.0,11561.58,Chequing
+2021-08-05,Interac e-Transfer SENT,300.0,0.0,11261.58,Chequing
+2021-09-01,Payroll Deposit,0.0,1600.0,12861.58,Chequing
+2021-09-03,Debit Purchase - Metro,47.23,0.0,12814.35,Chequing
+2021-10-01,Payroll Deposit,0.0,1600.0,14414.35,Chequing
+2021-10-02,Bill Payment - Hydro,140.0,0.0,14274.35,Chequing
+2021-11-01,Payroll Deposit,0.0,1600.0,15874.35,Chequing
+2021-11-05,Debit Purchase - Walmart,84.23,0.0,15790.12,Chequing
+2021-12-01,Payroll Deposit,0.0,1600.0,17390.12,Chequing
+2021-12-06,Bill Payment - Rogers,125.0,0.0,17265.12,Chequing

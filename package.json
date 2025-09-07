@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.3",
+    "@nuxtjs/toast": "^3.3.1",
+    "chart.js": "^4.5.0",
     "core-js": "^3.6.5",
     "express": "^4.17.1",
     "nuxt": "^2.18.1",

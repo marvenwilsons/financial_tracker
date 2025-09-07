@@ -1,52 +1,72 @@
-import colors from 'vuetify/es5/util/colors'
+// import colors from 'vuetify/es5/util/colors'
 const bodyParser = require('body-parser')
+const colors = require('vuetify/es5/util/colors').default
 
 export default {
-  // Global page headers (https://go.nuxtjs.dev/config-head)
+  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
+  ssr: false,
+
+  // Target: https://go.nuxtjs.dev/config-target
+  target: 'static',
+
+  // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - financial-tracking',
-    title: 'financial-tracking',
+    titleTemplate: '%s - financial_tracker',
+    title: 'financial_tracker',
+    htmlAttrs: {
+      lang: 'en'
+    },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { hid: 'description', name: 'description', content: '' },
+      { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ]
   },
 
-  // Global CSS (https://go.nuxtjs.dev/config-css)
+  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    '~/assets/css/dq'
+    '@/assets/css/main.css'
   ],
 
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
+  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/client-only.js', mode: 'client' },
-    { src: '~/plugins/globals.js', mode: 'client' },
+    '@/plugins/globals.js'
   ],
-  
 
-  // Auto import components (https://go.nuxtjs.dev/config-components)
+  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
+  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
 
-  // Modules (https://go.nuxtjs.dev/config-modules)
+  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios'
+    // https://go.nuxtjs.dev/axios
+    '@nuxtjs/axios',
+    '@nuxtjs/toast'
   ],
 
-  // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
+  // Axios module configuration: https://go.nuxtjs.dev/config-axios
+  axios: {
+    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
+    baseURL: '/',
+  },
+
+  // Build configuration
+  build: {},
+
+  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: false,
+      dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -61,12 +81,15 @@ export default {
     }
   },
 
-  // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {
+  // Server configuration
+  server: {
+    port: 3000,
+    host: '0.0.0.0'
   },
+
   serverMiddleware: [
     bodyParser.json(),
-    '~/server/index.js',
+    { path: '/api', handler: '~/server/index.js' }
   ]
 }
 
